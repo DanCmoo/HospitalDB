@@ -3,16 +3,13 @@ import { UsuarioEntity } from './usuario.entity';
 
 @Entity('activity_logs')
 export class ActivityLogEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'id_log' })
   idLog: number;
 
   @Column({ name: 'id_usuario' })
   idUsuario: number;
 
-  @Column({ name: 'id_sede', type: 'int' })
-  idSede: number;
-
-  @Column({ length: 100 })
+  @Column({ length: 50 })
   accion: string;
 
   @Column({ type: 'text', nullable: true })
@@ -24,7 +21,6 @@ export class ActivityLogEntity {
   @CreateDateColumn({ name: 'fecha_accion', type: 'timestamp' })
   fechaAccion: Date;
 
-  @ManyToOne(() => UsuarioEntity, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'id_usuario' })
-  usuario: UsuarioEntity;
+  // Nota: No se define relación ManyToOne con UsuarioEntity porque están en diferentes bases de datos
+  // La relación se hace manualmente via id_usuario cuando sea necesario
 }

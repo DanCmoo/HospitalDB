@@ -10,7 +10,16 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ReportesService } from '../services/reportes.service';
-import { GenerarReportePacienteDto, GenerarReporteSedeDto, GenerarReporteGeneralDto } from '../dtos';
+import { 
+  GenerarReportePacienteDto, 
+  GenerarReporteSedeDto, 
+  GenerarReporteGeneralDto,
+  MedicamentosMasRecetadosDto,
+  MedicosConMasConsultasDto,
+  TiempoPromedioDiagnosticoDto,
+  PacientesPorEnfermedadDto,
+  DepartamentosEquipamientoCompartidoDto,
+} from '../dtos';
 import { AuthGuard, RolesGuard } from '../../auth/guards';
 import { Roles } from '../../auth/decorators';
 
@@ -64,5 +73,30 @@ export class ReportesController {
       `attachment; filename="reporte_sede_${dto.idSede}_${Date.now()}.pdf"`,
     );
     res.status(HttpStatus.OK).send(pdfBuffer);
+  }
+
+  @Get('estadisticas/medicamentos-mas-recetados')
+  async medicamentosMasRecetados(@Query() dto: MedicamentosMasRecetadosDto) {
+    return this.reportesService.obtenerMedicamentosMasRecetados(dto.idSede);
+  }
+
+  @Get('estadisticas/medicos-mas-consultas')
+  async medicosConMasConsultas(@Query() dto: MedicosConMasConsultasDto) {
+    return this.reportesService.obtenerMedicosConMasConsultas(dto.idSede);
+  }
+
+  @Get('estadisticas/tiempo-promedio-diagnostico')
+  async tiempoPromedioDiagnostico(@Query() dto: TiempoPromedioDiagnosticoDto) {
+    return this.reportesService.obtenerTiempoPromedioDiagnostico(dto.idSede);
+  }
+
+  @Get('estadisticas/pacientes-por-enfermedad')
+  async pacientesPorEnfermedad(@Query() dto: PacientesPorEnfermedadDto) {
+    return this.reportesService.obtenerPacientesPorEnfermedad(dto);
+  }
+
+  @Get('estadisticas/departamentos-equipamiento-compartido')
+  async departamentosEquipamientoCompartido(@Query() dto: DepartamentosEquipamientoCompartidoDto) {
+    return this.reportesService.obtenerDepartamentosEquipamientoCompartido(dto.idSede);
   }
 }

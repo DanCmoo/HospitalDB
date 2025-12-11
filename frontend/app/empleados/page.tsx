@@ -6,8 +6,9 @@ import { Empleado, CreateEmpleadoRequest, UpdateEmpleadoRequest } from '@/types/
 import EmpleadoForm from '@/components/empleados/EmpleadoForm';
 import EmpleadoTable from '@/components/empleados/EmpleadoTable';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function EmpleadosPage() {
+function EmpleadosContent() {
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -260,5 +261,13 @@ export default function EmpleadosPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function EmpleadosPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <EmpleadosContent />
+    </ProtectedRoute>
   );
 }

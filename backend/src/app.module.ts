@@ -2,6 +2,7 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DatabaseConfig } from './config/database.config';
+import { AuthDatabaseConfig } from './config/auth-database.config';
 import { SecurityHeadersMiddleware } from './common/middleware/security-headers.middleware';
 import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware';
 import { HealthModule } from './modules/health/health.module';
@@ -27,10 +28,19 @@ import { ReportesModule } from './modules/reportes/reportes.module';
       envFilePath: '.env',
       ignoreEnvFile: false,
     }),
+    // Conexión principal - Sede específica (Norte/Centro/Sur)
     TypeOrmModule.forRootAsync({
+      name: 'default',
       imports: [ConfigModule],
       useClass: DatabaseConfig,
       inject: [DatabaseConfig],
+    }),
+    // Conexión secundaria - Base de datos de autenticación (HUB)
+    TypeOrmModule.forRootAsync({
+      name: 'authConnection',
+      imports: [ConfigModule],
+      useClass: AuthDatabaseConfig,
+      inject: [AuthDatabaseConfig],
     }),
     AuthModule,
     HealthModule,

@@ -10,15 +10,20 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { EquipamientoService } from '../services/equipamiento.service';
 import { CreateEquipamientoDto, UpdateEquipamientoDto, EquipamientoResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('equipamiento')
+@UseGuards(AuthGuard, RolesGuard)
 export class EquipamientoController {
   constructor(private readonly equipamientoService: EquipamientoService) {}
 
   @Post()
+  @Roles('administrador', 'personal_administrativo')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createEquipamientoDto: CreateEquipamientoDto,
@@ -27,6 +32,7 @@ export class EquipamientoController {
   }
 
   @Get()
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
@@ -57,23 +63,27 @@ export class EquipamientoController {
   }
 
   @Get('search')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async search(@Query('term') term: string): Promise<EquipamientoResponseDto[]> {
     return this.equipamientoService.search(term);
   }
 
   @Get('count')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async count(): Promise<{ count: number }> {
     const count = await this.equipamientoService.count();
     return { count };
   }
 
   @Get('next-codigo')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async getNextCodigo(): Promise<{ nextCodigo: number }> {
     const nextCodigo = await this.equipamientoService.getNextCodigo();
     return { nextCodigo };
   }
 
   @Get(':codigo')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async findByCodigo(
     @Param('codigo', ParseIntPipe) codigo: number,
   ): Promise<EquipamientoResponseDto> {
@@ -81,6 +91,7 @@ export class EquipamientoController {
   }
 
   @Put(':codigo')
+  @Roles('administrador', 'personal_administrativo')
   async update(
     @Param('codigo', ParseIntPipe) codigo: number,
     @Body() updateEquipamientoDto: UpdateEquipamientoDto,
@@ -89,6 +100,7 @@ export class EquipamientoController {
   }
 
   @Delete(':codigo')
+  @Roles('administrador', 'personal_administrativo')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('codigo', ParseIntPipe) codigo: number): Promise<void> {
     return this.equipamientoService.delete(codigo);

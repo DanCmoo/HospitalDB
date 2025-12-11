@@ -7,8 +7,9 @@ import { equipamientoApi } from '@/lib/api/equipamiento';
 import { Pertenece, CreatePerteneceDto } from '@/lib/types/pertenece';
 import { Departamento } from '@/lib/types/departamento';
 import { Equipamiento } from '@/lib/types/equipamiento';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function PertenecePage() {
+function PerteneceContent() {
   const [perteneces, setPerteneces] = useState<Pertenece[]>([]);
   const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
   const [equipamientos, setEquipamientos] = useState<Equipamiento[]>([]);
@@ -302,5 +303,13 @@ export default function PertenecePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PertenecePage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'personal_administrativo']}>
+      <PerteneceContent />
+    </ProtectedRoute>
   );
 }

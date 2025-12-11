@@ -3,68 +3,49 @@ import { Equipamiento, CreateEquipamientoDto, UpdateEquipamientoDto } from '@/ty
 
 export const equipamientoApi = {
   getAll: async (): Promise<Equipamiento[]> => {
-    const response = await apiClient.get<Equipamiento[]>('/equipamiento');
-    return response.data;
+    return await apiClient.get<Equipamiento[]>('/equipamiento');
   },
 
   getByCodigo: async (codigo: number): Promise<Equipamiento> => {
-    const response = await apiClient.get<Equipamiento>(`/equipamiento/${codigo}`);
-    return response.data;
+    return await apiClient.get<Equipamiento>(`/equipamiento/${codigo}`);
   },
 
   search: async (term: string): Promise<Equipamiento[]> => {
-    const response = await apiClient.get<Equipamiento[]>('/equipamiento/search', {
-      params: { term },
-    });
-    return response.data;
+    return await apiClient.get<Equipamiento[]>(`/equipamiento/search?term=${encodeURIComponent(term)}`);
   },
 
   getByEstado: async (estado: string): Promise<Equipamiento[]> => {
-    const response = await apiClient.get<Equipamiento[]>('/equipamiento', {
-      params: { estado },
-    });
-    return response.data;
+    return await apiClient.get<Equipamiento[]>(`/equipamiento?estado=${encodeURIComponent(estado)}`);
   },
 
   getByEmpleado: async (empleado: number): Promise<Equipamiento[]> => {
-    const response = await apiClient.get<Equipamiento[]>('/equipamiento', {
-      params: { empleado },
-    });
-    return response.data;
+    return await apiClient.get<Equipamiento[]>(`/equipamiento?empleado=${empleado}`);
   },
 
   getByDepartamento: async (departamento: string): Promise<Equipamiento[]> => {
-    const response = await apiClient.get<Equipamiento[]>('/equipamiento', {
-      params: { departamento },
-    });
-    return response.data;
+    return await apiClient.get<Equipamiento[]>(`/equipamiento?departamento=${encodeURIComponent(departamento)}`);
   },
 
   getWithPagination: async (page: number, limit: number) => {
-    const response = await apiClient.get('/equipamiento', {
-      params: { page, limit },
-    });
-    return response.data;
+    return await apiClient.get(`/equipamiento?page=${page}&limit=${limit}`);
   },
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ count: number }>('/equipamiento/count');
-    return response.data.count;
+    return response.count;
   },
 
   getNextCodigo: async (): Promise<number> => {
     const response = await apiClient.get<{ nextCodigo: number }>('/equipamiento/next-codigo');
-    return response.data.nextCodigo;
+    return response.nextCodigo;
   },
 
   create: async (data: CreateEquipamientoDto): Promise<Equipamiento> => {
-    const response = await apiClient.post<Equipamiento>('/equipamiento', data);
-    return response.data;
+    return await apiClient.post<Equipamiento>('/equipamiento', data);
   },
 
   update: async (codigo: number, data: UpdateEquipamientoDto): Promise<Equipamiento> => {
-    const response = await apiClient.put<Equipamiento>(`/equipamiento/${codigo}`, data);
-    return response.data;
+    return await apiClient.put<Equipamiento>(`/equipamiento/${codigo}`, data);
   },
 
   delete: async (codigo: number): Promise<void> => {

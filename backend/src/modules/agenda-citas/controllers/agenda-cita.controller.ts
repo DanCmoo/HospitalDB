@@ -10,12 +10,17 @@ import {
   ValidationPipe,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AgendaCitaService } from '../services/agenda-cita.service';
 import { CreateAgendaCitaDto, UpdateAgendaCitaDto, AgendaCitaResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('agenda-citas')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
 export class AgendaCitaController {
   constructor(private readonly agendaCitaService: AgendaCitaService) {}
 
@@ -56,11 +61,13 @@ export class AgendaCitaController {
   }
 
   @Post()
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async create(@Body() dto: CreateAgendaCitaDto): Promise<AgendaCitaResponseDto> {
     return this.agendaCitaService.create(dto);
   }
 
   @Put(':id')
+  @Roles('administrador', 'medico', 'enfermero')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateAgendaCitaDto,
@@ -69,6 +76,7 @@ export class AgendaCitaController {
   }
 
   @Delete(':id')
+  @Roles('administrador')
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.agendaCitaService.delete(id);
   }

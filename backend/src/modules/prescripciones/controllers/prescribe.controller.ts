@@ -10,16 +10,22 @@ import {
   ValidationPipe,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PrescribeService } from '../services/prescribe.service';
 import { CreatePrescribeDto, UpdatePrescribeDto, PrescribeResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('prescripciones')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador', 'medico')
 export class PrescribeController {
   constructor(private readonly prescribeService: PrescribeService) {}
 
   @Get()
+  @Roles('administrador', 'medico', 'enfermero')
   async findAll(
     @Query('idCita') idCita?: string,
     @Query('codMed') codMed?: string,

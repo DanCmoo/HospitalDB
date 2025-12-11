@@ -24,23 +24,19 @@ export const agendaCitasApi = {
       ? `/agenda-citas?${queryParams.toString()}` 
       : '/agenda-citas';
     
-    const response = await apiClient.get<AgendaCita[]>(url);
-    return response.data;
+    return await apiClient.get<AgendaCita[]>(url);
   },
 
   getById: async (id: number): Promise<AgendaCita> => {
-    const response = await apiClient.get<AgendaCita>(`/agenda-citas/${id}`);
-    return response.data;
+    return await apiClient.get<AgendaCita>(`/agenda-citas/${id}`);
   },
 
   create: async (data: CreateAgendaCitaDto): Promise<AgendaCita> => {
-    const response = await apiClient.post<AgendaCita>('/agenda-citas', data);
-    return response.data;
+    return await apiClient.post<AgendaCita>('/agenda-citas', data);
   },
 
   update: async (id: number, data: UpdateAgendaCitaDto): Promise<AgendaCita> => {
-    const response = await apiClient.put<AgendaCita>(`/agenda-citas/${id}`, data);
-    return response.data;
+    return await apiClient.put<AgendaCita>(`/agenda-citas/${id}`, data);
   },
 
   delete: async (id: number): Promise<void> => {
@@ -49,6 +45,6 @@ export const agendaCitasApi = {
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ total: number }>('/agenda-citas/estadisticas/total');
-    return response.data.total;
+    return response.total;
   },
 };

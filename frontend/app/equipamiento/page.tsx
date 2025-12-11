@@ -5,8 +5,9 @@ import { Equipamiento, EstadoEquipamiento } from '@/types/equipamiento';
 import { equipamientoApi } from '@/lib/api/equipamiento';
 import EquipamientoForm from '@/components/equipamiento/EquipamientoForm';
 import EquipamientoTable from '@/components/equipamiento/EquipamientoTable';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function EquipamientoPage() {
+function EquipamientoContent() {
   const [equipamientos, setEquipamientos] = useState<Equipamiento[]>([]);
   const [filteredEquipamientos, setFilteredEquipamientos] = useState<Equipamiento[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -175,5 +176,13 @@ export default function EquipamientoPage() {
         Total de equipamiento: {filteredEquipamientos.length} de {equipamientos.length}
       </div>
     </div>
+  );
+}
+
+export default function EquipamientoPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <EquipamientoContent />
+    </ProtectedRoute>
   );
 }

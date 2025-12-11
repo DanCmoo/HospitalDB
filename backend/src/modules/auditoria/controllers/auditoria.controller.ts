@@ -9,12 +9,17 @@ import {
   ValidationPipe,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { AuditoriaService } from '../services/auditoria.service';
 import { CreateAuditoriaDto, AuditoriaResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('auditoria')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador')
 export class AuditoriaController {
   constructor(private readonly auditoriaService: AuditoriaService) {}
 
@@ -64,5 +69,12 @@ export class AuditoriaController {
   async count(): Promise<{ total: number }> {
     const total = await this.auditoriaService.count();
     return { total };
+  }
+
+  @Get('estadisticas/ultimos-accesos-historiales')
+  async ultimosAccesosHistoriales(
+    @Query('limite', new ParseIntPipe({ optional: true })) limite?: number,
+  ): Promise<AuditoriaResponseDto[]> {
+    return this.auditoriaService.findUltimosAccesosHistoriales(limite || 10);
   }
 }

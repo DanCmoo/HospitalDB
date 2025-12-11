@@ -1,47 +1,47 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { UsuarioEntity } from '../entities/usuario.entity';
 
 @Injectable()
 export class UsuarioRepository extends Repository<UsuarioEntity> {
-  constructor(private dataSource: DataSource) {
+  constructor(@InjectDataSource('authConnection') private dataSource: DataSource) {
     super(UsuarioEntity, dataSource.createEntityManager());
   }
 
   async findAll(): Promise<UsuarioEntity[]> {
     return this.find({
-      relations: ['persona'],
-      select: ['idUsuario', 'numDoc', 'username', 'rol', 'activo', 'fechaCreacion', 'fechaActualizacion'],
+      select: ['idUsuario', 'numDoc', 'correo', 'rol', 'activo', 'fechaCreacion', 'fechaActualizacion'],
     });
   }
 
   async findById(id: number): Promise<UsuarioEntity | null> {
     return this.findOne({
       where: { idUsuario: id },
-      relations: ['persona'],
     });
   }
 
-  async findByUsername(username: string): Promise<UsuarioEntity | null> {
+  async findByEmail(correo: string): Promise<UsuarioEntity | null> {
     return this.findOne({
-      where: { username },
-      relations: ['persona'],
+      where: { correo },
     });
   }
 
   async findByNumDoc(numDoc: string): Promise<UsuarioEntity | null> {
     return this.findOne({
       where: { numDoc },
-      relations: ['persona'],
     });
   }
 
   async findByRol(rol: string): Promise<UsuarioEntity[]> {
     return this.find({
       where: { rol: rol as any },
-      relations: ['persona'],
-      select: ['idUsuario', 'numDoc', 'username', 'rol', 'activo', 'fechaCreacion'],
+      select: ['idUsuario', 'numDoc', 'correo', 'rol', 'activo', 'fechaCreacion'],
     });
+  }
+
+  async updateLastAccess(id: number): Promise<void> {
+    await this.update(id, { ultimoAcceso: new Date() });
   }
 
   async createUsuario(usuario: Partial<UsuarioEntity>): Promise<UsuarioEntity> {
@@ -57,8 +57,8 @@ export class UsuarioRepository extends Repository<UsuarioEntity> {
     await this.delete(id);
   }
 
-  async existsByUsername(username: string): Promise<boolean> {
-    const count = await this.count({ where: { username } });
+  async existsByEmail(correo: string): Promise<boolean> {
+    const count = await this.count({ where: { correo } });
     return count > 0;
   }
 
@@ -70,8 +70,7 @@ export class UsuarioRepository extends Repository<UsuarioEntity> {
   async getActiveUsers(): Promise<UsuarioEntity[]> {
     return this.find({
       where: { activo: true },
-      relations: ['persona'],
-      select: ['idUsuario', 'username', 'rol', 'numDoc'],
+      select: ['idUsuario', 'correo', 'rol', 'numDoc'],
     });
   }
 }

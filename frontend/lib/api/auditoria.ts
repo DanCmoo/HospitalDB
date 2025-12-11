@@ -22,18 +22,15 @@ export const auditoriaApi = {
       ? `/auditoria?${queryParams.toString()}` 
       : '/auditoria';
     
-    const response = await apiClient.get<Auditoria[]>(url);
-    return response.data;
+    return await apiClient.get<Auditoria[]>(url);
   },
 
   getById: async (id: number): Promise<Auditoria> => {
-    const response = await apiClient.get<Auditoria>(`/auditoria/${id}`);
-    return response.data;
+    return await apiClient.get<Auditoria>(`/auditoria/${id}`);
   },
 
   create: async (data: CreateAuditoriaDto): Promise<Auditoria> => {
-    const response = await apiClient.post<Auditoria>('/auditoria', data);
-    return response.data;
+    return await apiClient.post<Auditoria>('/auditoria', data);
   },
 
   delete: async (id: number): Promise<void> => {
@@ -42,6 +39,6 @@ export const auditoriaApi = {
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ total: number }>('/auditoria/estadisticas/total');
-    return response.data.total;
+    return response.total;
   },
 };

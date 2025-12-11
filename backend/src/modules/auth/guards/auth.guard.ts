@@ -24,6 +24,9 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('No está autenticado');
     }
 
+    // Agregar el usuario al request para que RolesGuard pueda acceder a él
+    request.user = user;
+
     return true;
   }
 }

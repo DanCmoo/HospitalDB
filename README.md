@@ -24,11 +24,12 @@ hospital-system/
 ## 🎯 Sistema Multi-Red Hospitalaria
 
 Este proyecto implementa una arquitectura distribuida con:
-- **1 Hub Central**: Base de datos maestra que consolida información
+- **1 Hub Central**: Base de datos maestra que consolida información y gestiona autenticación
 - **3 Sedes Hospitalarias**: Norte, Centro y Sur
+- **Autenticación Centralizada**: Email-based con bcrypt en AWS RDS
 - **Replicación automática**: Datos críticos se sincronizan en tiempo real
 - **Foreign Data Wrappers**: Consultas distribuidas entre bases
-- **4 Roles de usuario**: Control de acceso granular
+- **4 Roles de usuario**: Administrador, Médico, Enfermero, Personal Administrativo
 
 ### Instalación de Bases de Datos
 
@@ -97,27 +98,39 @@ psql -U postgres -f ejecutar_todo.sql
 
 Esto creará 4 bases de datos con datos de ejemplo. Ver [db/README_INSTALACION.md](db/README_INSTALACION.md) para más detalles.
 
-**Roles creados automáticamente:**
-- `administrador` / `admin_2025` (acceso total)
-- `medico` / `medico_2025` (clínico)
-- `enfermero` / `enfermero_2025` (limitado)
-- `personal_administrativo` / `admin_personal_2025` (administrativo)
+**Usuarios creados automáticamente:**
+- `admin@hospital.com` / `admin123` (Administrador)
+- `medico@hospital.com` / `medico123` (Médico)
+- `enfermero@hospital.com` / `enfermero123` (Enfermero)
+- `admin_staff@hospital.com` / `staff123` (Personal Administrativo)
+
+**Nota:** El sistema usa autenticación email-based. Los usuarios deben existir como personas en las sedes.
 
 ### Variables de Entorno
 
 #### Backend (.env)
 ```bash
-# Conectar al hub central o a una sede específica
-DB_HOST=localhost
+# Configuración de Sede Activa
+SEDE_ID=norte  # norte | centro | sur
+
+# Database Configuration - AWS RDS (Sedes)
+DB_HOST=hospital-db.ckxkg4eau7cu.us-east-1.rds.amazonaws.com
 DB_PORT=5432
 DB_USERNAME=postgres
-DB_PASSWORD=your_password
-DB_DATABASE=hospital_hub  # o hospital_sede_norte, hospital_sede_centro, hospital_sede_sur
-PORT=3000
+DB_PASSWORD=cTupP74Hg3nhKeQ
+DB_SSL=true
+
+# Authentication Database (Hub Centralizado)
+AUTH_DB_HOST=hospital-db.ckxkg4eau7cu.us-east-1.rds.amazonaws.com
+AUTH_DB_PORT=5432
+AUTH_DB_USERNAME=postgres
+AUTH_DB_PASSWORD=cTupP74Hg3nhKeQ
+AUTH_DB_NAME=hospital_hub
+
+# Server Configuration
+PORT=3001
 NODE_ENV=development
-JWT_SECRET=your_jwt_secret
-JWT_EXPIRATION=24h
-FRONTEND_URL=http://localhost:3001
+FRONTEND_URL=http://localhost:3000
 ```
 
 #### Frontend (.env.local)

@@ -10,16 +10,22 @@ import {
   ValidationPipe,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { HistorialMedicoService } from '../services/historial-medico.service';
 import { CreateHistorialMedicoDto, UpdateHistorialMedicoDto, HistorialMedicoResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('historiales')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador', 'medico')
 export class HistorialMedicoController {
   constructor(private readonly historialService: HistorialMedicoService) {}
 
   @Get()
+  @Roles('administrador', 'medico', 'enfermero')
   async findAll(
     @Query('codPac') codPac?: string,
     @Query('idEmp') idEmp?: string,
@@ -47,6 +53,7 @@ export class HistorialMedicoController {
   }
 
   @Get(':id')
+  @Roles('administrador', 'medico', 'enfermero')
   async findById(@Param('id', ParseIntPipe) id: number): Promise<HistorialMedicoResponseDto> {
     return this.historialService.findById(id);
   }
@@ -73,5 +80,12 @@ export class HistorialMedicoController {
   async count(): Promise<{ total: number }> {
     const total = await this.historialService.count();
     return { total };
+  }
+
+  @Get('consolidado/todas-sedes')
+  async findConsolidadoTodasSedes(
+    @Query('codPac') codPac?: string,
+  ): Promise<HistorialMedicoResponseDto[]> {
+    return this.historialService.findConsolidadoTodasSedes(codPac ? parseInt(codPac) : undefined);
   }
 }

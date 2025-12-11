@@ -1,7 +1,7 @@
 import { ErrorResponse } from '@/types/api';
 
-// URL fija del API backend
-const API_URL = 'http://localhost:3001';
+// URL del API backend desde variable de entorno
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 class ApiError extends Error {
   constructor(

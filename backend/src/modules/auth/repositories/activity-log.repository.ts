@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { ActivityLogEntity } from '../entities/activity-log.entity';
 import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class ActivityLogRepository extends Repository<ActivityLogEntity> {
-  constructor(private dataSource: DataSource) {
+  constructor(@InjectDataSource('authConnection') private dataSource: DataSource) {
     super(ActivityLogEntity, dataSource.createEntityManager());
   }
 
@@ -15,11 +16,7 @@ export class ActivityLogRepository extends Repository<ActivityLogEntity> {
     detalles?: string;
     ipAddress?: string;
   }): Promise<ActivityLogEntity> {
-    const idSede = SedeConfig.getIdSede();
-    const log = this.create({
-      ...data,
-      idSede,
-    });
+    const log = this.create(data);
     return await this.save(log);
   }
 
@@ -33,7 +30,6 @@ export class ActivityLogRepository extends Repository<ActivityLogEntity> {
 
   async findAll(limit: number = 100): Promise<ActivityLogEntity[]> {
     return await this.find({
-      relations: ['usuario', 'usuario.persona'],
       order: { fechaAccion: 'DESC' },
       take: limit,
     });

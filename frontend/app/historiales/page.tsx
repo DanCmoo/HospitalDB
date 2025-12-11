@@ -9,8 +9,9 @@ import { HistorialMedico, CreateHistorialMedicoDto, UpdateHistorialMedicoDto } f
 import { Empleado } from '@/lib/types/empleado';
 import { Paciente } from '@/lib/types/paciente';
 import { Sede } from '@/lib/types/sede';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function HistorialesPage() {
+function HistorialesContent() {
   const [historiales, setHistoriales] = useState<HistorialMedico[]>([]);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
@@ -356,5 +357,13 @@ export default function HistorialesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function HistorialesPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero']}>
+      <HistorialesContent />
+    </ProtectedRoute>
   );
 }

@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { EmpleadoService } from '../services/empleado.service';
 import {
@@ -17,12 +18,16 @@ import {
   UpdateEmpleadoDto,
   EmpleadoResponseDto,
 } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('empleados')
+@UseGuards(AuthGuard, RolesGuard)
 export class EmpleadoController {
   constructor(private readonly empleadoService: EmpleadoService) {}
 
   @Post()
+  @Roles('administrador', 'personal_administrativo')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createEmpleadoDto: CreateEmpleadoDto,
@@ -31,6 +36,7 @@ export class EmpleadoController {
   }
 
   @Get()
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async findAll(
     @Query('page') page?: string,
     @Query('limit') limit?: string,
@@ -56,12 +62,14 @@ export class EmpleadoController {
   }
 
   @Get('count')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async count(): Promise<{ count: number }> {
     const count = await this.empleadoService.count();
     return { count };
   }
 
   @Get(':id')
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async findOne(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<EmpleadoResponseDto> {
@@ -69,6 +77,7 @@ export class EmpleadoController {
   }
 
   @Put(':id')
+  @Roles('administrador', 'personal_administrativo')
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateEmpleadoDto: UpdateEmpleadoDto,
@@ -77,6 +86,7 @@ export class EmpleadoController {
   }
 
   @Delete(':id')
+  @Roles('administrador', 'personal_administrativo')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.empleadoService.delete(id);

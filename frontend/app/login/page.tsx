@@ -8,7 +8,7 @@ export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
   });
   const [error, setError] = useState('');
@@ -20,7 +20,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      await login(formData.username, formData.password);
+      await login(formData.email, formData.password);
       router.push('/dashboard');
     } catch (err: any) {
       console.error('Login error:', err);
@@ -46,15 +46,16 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
-              Usuario
+            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              Correo Electrónico
             </label>
             <input
-              id="username"
-              type="text"
-              value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-2 bg-gray-900 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="ejemplo@hospital.com"
               required
               autoFocus
             />
@@ -95,13 +96,13 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-          <p className="text-xs text-gray-600 mb-2 font-semibold">Roles disponibles:</p>
-          <ul className="text-xs text-gray-500 space-y-1">
-            <li>• <strong>Administrador:</strong> Acceso total</li>
-            <li>• <strong>Médico:</strong> Pacientes, Citas, Historiales</li>
-            <li>• <strong>Enfermero:</strong> Consulta y edición limitada</li>
-            <li>• <strong>Personal Administrativo:</strong> Gestión administrativa</li>
+        <div className="mt-8 p-4 bg-gray-900 rounded-lg border border-gray-700">
+          <p className="text-xs text-gray-300 mb-3 font-semibold">Usuarios de Prueba:</p>
+          <ul className="text-xs text-gray-400 space-y-2">
+            <li>• <strong className="text-blue-400">admin@hospital.com</strong> / admin123</li>
+            <li>• <strong className="text-green-400">medico@hospital.com</strong> / medico123</li>
+            <li>• <strong className="text-yellow-400">enfermero@hospital.com</strong> / enfermero123</li>
+            <li>• <strong className="text-purple-400">admin_staff@hospital.com</strong> / staff123</li>
           </ul>
         </div>
       </div>

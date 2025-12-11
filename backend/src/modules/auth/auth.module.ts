@@ -13,7 +13,8 @@ import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsuarioEntity, ActivityLogEntity]),
+    // Registrar entidades en la conexión de autenticación (HUB)
+    TypeOrmModule.forFeature([UsuarioEntity, ActivityLogEntity], 'authConnection'),
     PersonasModule,
   ],
   controllers: [AuthController],

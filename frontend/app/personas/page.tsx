@@ -6,8 +6,9 @@ import { Persona, CreatePersonaRequest, UpdatePersonaRequest } from '@/types/per
 import PersonaForm from '@/components/personas/PersonaForm';
 import PersonaTable from '@/components/personas/PersonaTable';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function PersonasPage() {
+function PersonasContent() {
   const [personas, setPersonas] = useState<Persona[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -201,5 +202,13 @@ export default function PersonasPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function PersonasPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <PersonasContent />
+    </ProtectedRoute>
   );
 }

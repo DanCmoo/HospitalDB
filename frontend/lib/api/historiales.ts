@@ -22,23 +22,19 @@ export const historialesApi = {
       ? `/historiales?${queryParams.toString()}` 
       : '/historiales';
     
-    const response = await apiClient.get<HistorialMedico[]>(url);
-    return response.data;
+    return await apiClient.get<HistorialMedico[]>(url);
   },
 
   getById: async (id: number): Promise<HistorialMedico> => {
-    const response = await apiClient.get<HistorialMedico>(`/historiales/${id}`);
-    return response.data;
+    return await apiClient.get<HistorialMedico>(`/historiales/${id}`);
   },
 
   create: async (data: CreateHistorialMedicoDto): Promise<HistorialMedico> => {
-    const response = await apiClient.post<HistorialMedico>('/historiales', data);
-    return response.data;
+    return await apiClient.post<HistorialMedico>('/historiales', data);
   },
 
   update: async (id: number, data: UpdateHistorialMedicoDto): Promise<HistorialMedico> => {
-    const response = await apiClient.put<HistorialMedico>(`/historiales/${id}`, data);
-    return response.data;
+    return await apiClient.put<HistorialMedico>(`/historiales/${id}`, data);
   },
 
   delete: async (id: number): Promise<void> => {
@@ -47,6 +43,6 @@ export const historialesApi = {
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ total: number }>('/historiales/estadisticas/total');
-    return response.data.total;
+    return response.total;
   },
 };

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usuariosApi } from '@/lib/api/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { usuariosApi } from '@/lib/api/usuarios';
+import { useAuth } from '@/lib/contexts/AuthContext';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
 interface Usuario {
   idUsuario: number;
@@ -32,7 +33,7 @@ interface ActivityLog {
   };
 }
 
-export default function AdminUsuariosPage() {
+function AdminUsuariosContent() {
   const { user } = useAuth();
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [filteredUsuarios, setFilteredUsuarios] = useState<Usuario[]>([]);
@@ -386,10 +387,10 @@ export default function AdminUsuariosPage() {
           <h2 className="text-2xl font-bold text-white mb-4">Actividad Reciente</h2>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {activityLogs.map((log) => (
-              <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">>
+              <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">
                 <div className="flex justify-between">
                   <div>
-                    <span className="font-semibold text-white">{log.usuario?.username || 'Usuario'}</span>
+                    <span className="font-semibold text-white">{log.usuario?.correo || 'Usuario'}</span>
                     <span className="text-gray-300"> - {log.accion}</span>
                   </div>
                   <span className="text-sm text-gray-300">
@@ -498,7 +499,7 @@ export default function AdminUsuariosPage() {
             
             <div className="space-y-2">
               {activityLogs.map((log) => (
-                <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">>
+                <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">
                   <div className="flex justify-between">
                     <span className="font-semibold text-white">{log.accion}</span>
                     <span className="text-sm text-gray-300">
@@ -524,5 +525,13 @@ export default function AdminUsuariosPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AdminUsuariosPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador']}>
+      <AdminUsuariosContent />
+    </ProtectedRoute>
   );
 }

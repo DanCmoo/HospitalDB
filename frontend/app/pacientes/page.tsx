@@ -5,8 +5,9 @@ import { Paciente } from '@/types/paciente';
 import { pacientesApi } from '@/lib/api/pacientes';
 import PacienteForm from '@/components/pacientes/PacienteForm';
 import PacienteTable from '@/components/pacientes/PacienteTable';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function PacientesPage() {
+function PacientesContent() {
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
   const [filteredPacientes, setFilteredPacientes] = useState<Paciente[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -175,5 +176,13 @@ export default function PacientesPage() {
         Total de pacientes: {filteredPacientes.length} de {pacientes.length}
       </div>
     </div>
+  );
+}
+
+export default function PacientesPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <PacientesContent />
+    </ProtectedRoute>
   );
 }

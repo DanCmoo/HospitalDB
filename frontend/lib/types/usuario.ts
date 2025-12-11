@@ -1,7 +1,7 @@
 export interface Usuario {
   idUsuario: number;
   numDoc: string;
-  username: string;
+  correo: string;
   rol: 'administrador' | 'medico' | 'enfermero' | 'personal_administrativo';
   activo: boolean;
   fechaCreacion: Date;
@@ -17,7 +17,7 @@ export interface Usuario {
 
 export interface CreateUsuarioDto {
   numDoc: string;
-  username: string;
+  correo: string;
   password: string;
   rol?: 'administrador' | 'medico' | 'enfermero' | 'personal_administrativo';
   activo?: boolean;
@@ -30,6 +30,6 @@ export interface UpdateUsuarioDto {
 }
 
 export interface LoginDto {
-  username: string;
+  email: string;
   password: string;
 }

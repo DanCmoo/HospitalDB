@@ -14,23 +14,19 @@ export const prescripcionesApi = {
       ? `/prescripciones?${queryParams.toString()}` 
       : '/prescripciones';
     
-    const response = await apiClient.get<Prescribe[]>(url);
-    return response.data;
+    return await apiClient.get<Prescribe[]>(url);
   },
 
   getOne: async (codMed: number, idCita: number): Promise<Prescribe> => {
-    const response = await apiClient.get<Prescribe>(`/prescripciones/${codMed}/${idCita}`);
-    return response.data;
+    return await apiClient.get<Prescribe>(`/prescripciones/${codMed}/${idCita}`);
   },
 
   create: async (data: CreatePrescribeDto): Promise<Prescribe> => {
-    const response = await apiClient.post<Prescribe>('/prescripciones', data);
-    return response.data;
+    return await apiClient.post<Prescribe>('/prescripciones', data);
   },
 
   update: async (codMed: number, idCita: number, data: UpdatePrescribeDto): Promise<Prescribe> => {
-    const response = await apiClient.put<Prescribe>(`/prescripciones/${codMed}/${idCita}`, data);
-    return response.data;
+    return await apiClient.put<Prescribe>(`/prescripciones/${codMed}/${idCita}`, data);
   },
 
   delete: async (codMed: number, idCita: number): Promise<void> => {
@@ -39,6 +35,6 @@ export const prescripcionesApi = {
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ total: number }>('/prescripciones/estadisticas/total');
-    return response.data.total;
+    return response.total;
   },
 };

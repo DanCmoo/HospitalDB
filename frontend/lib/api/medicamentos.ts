@@ -3,66 +3,49 @@ import { Medicamento, CreateMedicamentoDto, UpdateMedicamentoDto, UpdateStockDto
 
 export const medicamentosApi = {
   getAll: async (): Promise<Medicamento[]> => {
-    const response = await apiClient.get<Medicamento[]>('/medicamentos');
-    return response.data;
+    return await apiClient.get<Medicamento[]>('/medicamentos');
   },
 
   getByCodigo: async (codigo: number): Promise<Medicamento> => {
-    const response = await apiClient.get<Medicamento>(`/medicamentos/${codigo}`);
-    return response.data;
+    return await apiClient.get<Medicamento>(`/medicamentos/${codigo}`);
   },
 
   search: async (term: string): Promise<Medicamento[]> => {
-    const response = await apiClient.get<Medicamento[]>('/medicamentos/search', {
-      params: { term },
-    });
-    return response.data;
+    return await apiClient.get<Medicamento[]>(`/medicamentos/search?term=${encodeURIComponent(term)}`);
   },
 
   getByProveedor: async (proveedor: string): Promise<Medicamento[]> => {
-    const response = await apiClient.get<Medicamento[]>('/medicamentos', {
-      params: { proveedor },
-    });
-    return response.data;
+    return await apiClient.get<Medicamento[]>(`/medicamentos?proveedor=${encodeURIComponent(proveedor)}`);
   },
 
   getStockBajo: async (minimo: number = 10): Promise<Medicamento[]> => {
-    const response = await apiClient.get<Medicamento[]>('/medicamentos/stock-bajo', {
-      params: { minimo },
-    });
-    return response.data;
+    return await apiClient.get<Medicamento[]>(`/medicamentos/stock-bajo?minimo=${minimo}`);
   },
 
   getWithPagination: async (page: number, limit: number) => {
-    const response = await apiClient.get('/medicamentos', {
-      params: { page, limit },
-    });
-    return response.data;
+    return await apiClient.get(`/medicamentos?page=${page}&limit=${limit}`);
   },
 
   getCount: async (): Promise<number> => {
     const response = await apiClient.get<{ count: number }>('/medicamentos/count');
-    return response.data.count;
+    return response.count;
   },
 
   getNextCodigo: async (): Promise<number> => {
     const response = await apiClient.get<{ nextCodigo: number }>('/medicamentos/next-codigo');
-    return response.data.nextCodigo;
+    return response.nextCodigo;
   },
 
   create: async (data: CreateMedicamentoDto): Promise<Medicamento> => {
-    const response = await apiClient.post<Medicamento>('/medicamentos', data);
-    return response.data;
+    return await apiClient.post<Medicamento>('/medicamentos', data);
   },
 
   update: async (codigo: number, data: UpdateMedicamentoDto): Promise<Medicamento> => {
-    const response = await apiClient.put<Medicamento>(`/medicamentos/${codigo}`, data);
-    return response.data;
+    return await apiClient.put<Medicamento>(`/medicamentos/${codigo}`, data);
   },
 
   updateStock: async (codigo: number, data: UpdateStockDto): Promise<Medicamento> => {
-    const response = await apiClient.patch<Medicamento>(`/medicamentos/${codigo}/stock`, data);
-    return response.data;
+    return await apiClient.patch<Medicamento>(`/medicamentos/${codigo}/stock`, data);
   },
 
   delete: async (codigo: number): Promise<void> => {

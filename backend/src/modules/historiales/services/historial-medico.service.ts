@@ -89,6 +89,37 @@ export class HistorialMedicoService {
     return this.historialRepository.findWithPagination(page, limit);
   }
 
+  /**
+   * Vista consolidada de historias clínicas replicadas entre todas las sedes
+   */
+  async findConsolidadoTodasSedes(codPac?: number): Promise<HistorialMedicoResponseDto[]> {
+    // Obtener historiales de todas las sedes (1, 2, 3)
+    const sedes = [1, 2, 3];
+    const todosHistoriales = [];
+
+    for (const idSede of sedes) {
+      try {
+        let historiales;
+        if (codPac) {
+          historiales = await this.historialRepository.findByPaciente(codPac, idSede);
+        } else {
+          historiales = await this.historialRepository.findBySede(idSede);
+        }
+        todosHistoriales.push(...historiales);
+      } catch (error) {
+        // Si una sede no está disponible, continuar con las demás
+        console.log(`No se pudieron obtener historiales de sede ${idSede}`);
+      }
+    }
+
+    // Ordenar por fecha descendente
+    const historialesOrdenados = todosHistoriales.sort((a, b) => 
+      new Date(b.fecha).getTime() - new Date(a.fecha).getTime()
+    );
+
+    return historialesOrdenados.map((hist) => this.mapToResponse(hist));
+  }
+
   private mapToResponse(historial: any): HistorialMedicoResponseDto {
     return {
       codHist: historial.codHist,

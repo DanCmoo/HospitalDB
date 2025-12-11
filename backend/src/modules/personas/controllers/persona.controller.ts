@@ -9,6 +9,7 @@ import {
   Query,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { PersonaService } from '../services/persona.service';
 import {
@@ -16,8 +17,12 @@ import {
   UpdatePersonaDto,
   PersonaResponseDto,
 } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('personas')
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
 export class PersonaController {
   constructor(private readonly personaService: PersonaService) {}
 

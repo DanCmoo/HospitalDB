@@ -3,8 +3,9 @@
 ## 📋 Descripción
 
 Script SQL completo para desplegar un sistema hospitalario distribuido con:
-- **1 Hub Central**: Base de datos maestra que consolida información
+- **1 Hub Central**: Base de datos maestra que consolida información y gestiona autenticación
 - **3 Sedes Hospitalarias**: Norte, Centro y Sur
+- **Sistema de Autenticación Centralizado**: Email-based con bcrypt
 
 ## 🏗️ Arquitectura
 
@@ -48,19 +49,23 @@ psql -U postgres -f script.sql
 
 | Base de Datos | Propósito | Tablas Principales |
 |--------------|-----------|-------------------|
-| `hospital_hub` | Hub central | Índice global de pacientes, Historial compartido, Auditoría |
+| `hospital_hub` | Hub central | Índice global de pacientes, Historial compartido, Auditoría, **Usuarios (Auth)**, Activity Logs |
 | `hospital_sede_norte` | Sede operativa | Pacientes, Empleados, Citas, Equipamiento |
 | `hospital_sede_centro` | Sede operativa | Pacientes, Empleados, Citas, Equipamiento |
 | `hospital_sede_sur` | Sede operativa | Pacientes, Empleados, Citas, Equipamiento |
 
-## 👥 Roles y Credenciales
+## 👥 Usuarios Iniciales (Autenticación Centralizada)
 
-| Rol | Usuario | Contraseña | Permisos |
-|-----|---------|-----------|----------|
-| Administrador | `administrador` | `admin_2025` | Acceso total |
-| Médico | `medico` | `medico_2025` | Lectura/Escritura clínica |
-| Enfermero | `enfermero` | `enfermero_2025` | Lectura + Citas limitadas |
-| Administrativo | `personal_administrativo` | `admin_personal_2025` | Gestión pacientes/citas |
+El sistema incluye 4 usuarios de prueba creados automáticamente:
+
+| Email | Contraseña | Rol | Documento |
+|-------|-----------|-----|-----------|
+| `admin@hospital.com` | `admin123` | Administrador | 12345678 |
+| `medico@hospital.com` | `medico123` | Médico | 23456789 |
+| `enfermero@hospital.com` | `enfermero123` | Enfermero | 34567890 |
+| `admin_staff@hospital.com` | `staff123` | Personal Administrativo | 45678901 |
+
+**Nota:** Las contraseñas están hasheadas con bcrypt (10 rounds). Los usuarios están vinculados a personas en `hospital_sede_norte.personas`.
 
 ## 🔗 Características Implementadas
 
@@ -130,6 +135,24 @@ psql -U postgres -d hospital_sede_sur
 ```
 
 ### Consultas de Prueba
+
+#### Ver usuarios del sistema (desde Hub)
+```sql
+\c hospital_hub
+SELECT id_usuario, correo, rol, activo, fecha_creacion 
+FROM usuarios 
+ORDER BY id_usuario;
+```
+
+#### Ver logs de actividad
+```sql
+\c hospital_hub
+SELECT al.id_log, u.correo, al.accion, al.fecha_accion
+FROM activity_logs al
+JOIN usuarios u ON al.id_usuario = u.id_usuario
+ORDER BY al.fecha_accion DESC
+LIMIT 10;
+```
 
 #### Ver todos los pacientes de la red (desde Hub)
 ```sql

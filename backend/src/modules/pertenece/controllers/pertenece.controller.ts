@@ -9,12 +9,17 @@ import {
   ValidationPipe,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PerteneceService } from '../services/pertenece.service';
 import { CreatePerteneceDto, PerteneceResponseDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('pertenece')
 @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+@UseGuards(AuthGuard, RolesGuard)
+@Roles('administrador', 'personal_administrativo')
 export class PerteneceController {
   constructor(private readonly perteneceService: PerteneceService) {}
 

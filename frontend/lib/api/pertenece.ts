@@ -14,28 +14,25 @@ export const perteneceApi = {
       ? `/pertenece?${queryParams.toString()}` 
       : '/pertenece';
     
-    const response = await apiClient.get<Pertenece[]>(url);
-    return response.data;
+    return await apiClient.get<Pertenece[]>(url);
   },
 
   getById: async (nomDept: string, codEq: number): Promise<Pertenece> => {
-    const response = await apiClient.get<Pertenece>(`/pertenece/${nomDept}/${codEq}`);
-    return response.data;
+    return await apiClient.get<Pertenece>(`/pertenece/${nomDept}/${codEq}`);
   },
 
   getEquipamientoCount: async (nomDept: string): Promise<number> => {
     const response = await apiClient.get<{ count: number }>(`/pertenece/departamento/${nomDept}/count`);
-    return response.data.count;
+    return response.count;
   },
 
   getDepartamentosCount: async (codEq: number): Promise<number> => {
     const response = await apiClient.get<{ count: number }>(`/pertenece/equipamiento/${codEq}/count`);
-    return response.data.count;
+    return response.count;
   },
 
   create: async (data: CreatePerteneceDto): Promise<Pertenece> => {
-    const response = await apiClient.post<Pertenece>('/pertenece', data);
-    return response.data;
+    return await apiClient.post<Pertenece>('/pertenece', data);
   },
 
   delete: async (nomDept: string, codEq: number): Promise<void> => {

@@ -1,11 +1,12 @@
 export class UsuarioResponseDto {
   idUsuario: number;
   numDoc: string;
-  username: string;
+  correo: string;
   rol: 'administrador' | 'medico' | 'enfermero' | 'personal_administrativo';
   activo: boolean;
   fechaCreacion: Date;
   fechaActualizacion: Date;
+  ultimoAcceso?: Date;
   persona?: {
     numDoc: string;
     tipoDoc: string;

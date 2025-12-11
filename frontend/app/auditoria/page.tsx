@@ -5,8 +5,9 @@ import { auditoriaApi } from '@/lib/api/auditoria';
 import { personasApi } from '@/lib/api/personas';
 import { Auditoria, CreateAuditoriaDto } from '@/lib/types/auditoria';
 import { Persona } from '@/lib/types/persona';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function AuditoriaPage() {
+function AuditoriaContent() {
   const [auditorias, setAuditorias] = useState<Auditoria[]>([]);
   const [personas, setPersonas] = useState<Persona[]>([]);
   const [loading, setLoading] = useState(true);
@@ -364,5 +365,13 @@ export default function AuditoriaPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AuditoriaPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador']}>
+      <AuditoriaContent />
+    </ProtectedRoute>
   );
 }

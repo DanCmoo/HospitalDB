@@ -9,8 +9,9 @@ import { AgendaCita, EstadoCita, CreateAgendaCitaDto, UpdateAgendaCitaDto } from
 import { Empleado } from '@/lib/types/empleado';
 import { Paciente } from '@/lib/types/paciente';
 import { Sede } from '@/lib/types/sede';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function AgendaCitasPage() {
+function AgendaCitasContent() {
   const [citas, setCitas] = useState<AgendaCita[]>([]);
   const [empleados, setEmpleados] = useState<Empleado[]>([]);
   const [pacientes, setPacientes] = useState<Paciente[]>([]);
@@ -403,5 +404,13 @@ export default function AgendaCitasPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function AgendaCitasPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <AgendaCitasContent />
+    </ProtectedRoute>
   );
 }

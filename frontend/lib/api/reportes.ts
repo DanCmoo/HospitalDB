@@ -17,6 +17,8 @@ export interface ReporteGeneralParams {
   fechaFin?: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 export const reportesApi = {
   /**
    * Genera reporte PDF de un paciente
@@ -28,11 +30,16 @@ export const reportesApi = {
       ...(params.fechaFin && { fechaFin: params.fechaFin }),
     });
 
-    const response = await apiClient.get(`/reportes/paciente?${queryParams.toString()}`, {
-      responseType: 'blob',
+    const response = await fetch(`${API_URL}/reportes/paciente?${queryParams.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
     });
 
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Error al generar reporte');
+    }
+
+    return response.blob();
   },
 
   /**
@@ -47,11 +54,18 @@ export const reportesApi = {
     const queryString = queryParams.toString();
     const url = queryString ? `/reportes/general?${queryString}` : '/reportes/general';
     
-    const response = await apiClient.get(url, {
-      responseType: 'blob',
+    const response = await fetch(`${API_URL}${url}`, {
+      method: 'GET',
+      credentials: 'include',
     });
 
-    return response.data;
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error al generar reporte:', response.status, errorText);
+      throw new Error(`Error al generar reporte: ${response.status} - ${errorText}`);
+    }
+
+    return response.blob();
   },
 
   /**
@@ -64,11 +78,16 @@ export const reportesApi = {
       ...(params.fechaFin && { fechaFin: params.fechaFin }),
     });
 
-    const response = await apiClient.get(`/reportes/sede?${queryParams.toString()}`, {
-      responseType: 'blob',
+    const response = await fetch(`${API_URL}/reportes/sede?${queryParams.toString()}`, {
+      method: 'GET',
+      credentials: 'include',
     });
 
-    return response.data;
+    if (!response.ok) {
+      throw new Error('Error al generar reporte');
+    }
+
+    return response.blob();
   },
 
   /**

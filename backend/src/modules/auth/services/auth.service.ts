@@ -15,10 +15,21 @@ export class AuthService {
   ) {}
 
   async register(createDto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
-    // Verificar si el username ya existe
-    const existsUsername = await this.usuarioRepository.existsByUsername(createDto.username);
-    if (existsUsername) {
-      throw new ConflictException('El nombre de usuario ya está en uso');
+    // Verificar que la persona existe
+    const persona = await this.personaRepository.findByNumDoc(createDto.numDoc);
+    if (!persona) {
+      throw new NotFoundException('La persona con este documento no existe');
+    }
+
+    // Verificar que la persona tenga correo
+    if (!persona.correo) {
+      throw new ConflictException('La persona debe tener un correo registrado');
+    }
+
+    // Verificar si el correo ya tiene usuario
+    const existsEmail = await this.usuarioRepository.existsByEmail(persona.correo);
+    if (existsEmail) {
+      throw new ConflictException('Ya existe un usuario con este correo');
     }
 
     // Verificar si el documento ya tiene usuario
@@ -34,49 +45,70 @@ export class AuthService {
     // Crear usuario
     const usuario = await this.usuarioRepository.createUsuario({
       numDoc: createDto.numDoc,
-      username: createDto.username,
+      correo: persona.correo,
       passwordHash,
       rol: createDto.rol || 'personal_administrativo',
       activo: createDto.activo !== undefined ? createDto.activo : true,
     });
 
     const created = await this.usuarioRepository.findById(usuario.idUsuario);
-    return this.mapToResponse(created!);
+    return await this.mapToResponse(created!);
   }
 
   async login(loginDto: LoginDto, ipAddress?: string): Promise<any> {
-    // Buscar persona por correo
-    const persona = await this.personaRepository.findByEmail(loginDto.username);
-    if (!persona) {
+    // Buscar usuario por correo
+    const usuario = await this.usuarioRepository.findByEmail(loginDto.email);
+    if (!usuario) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // Verificar contraseña (sin hash)
-    if (persona.contrasena !== loginDto.password) {
+    // Verificar si el usuario está activo
+    if (!usuario.activo) {
+      throw new UnauthorizedException('Usuario inactivo');
+    }
+
+    // Verificar contraseña
+    const isPasswordValid = await bcrypt.compare(loginDto.password, usuario.passwordHash);
+    if (!isPasswordValid) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // Retornar datos de la persona
+    // Actualizar último acceso
+    await this.usuarioRepository.updateLastAccess(usuario.idUsuario);
+
+    // Registrar actividad
+    await this.activityLogService.logActivity(
+      usuario.idUsuario,
+      'login',
+      JSON.stringify({ ipAddress }),
+      ipAddress
+    );
+
+    // Obtener datos de la persona desde la sede
+    const persona = await this.personaRepository.findByNumDoc(usuario.numDoc);
+
+    // Retornar datos del usuario con persona
     return {
-      numDoc: persona.numDoc,
-      nomPers: persona.nomPers,
-      correo: persona.correo,
-      rol: 'usuario', // Rol por defecto
-      idSede: persona.idSedeRegistro,
+      idUsuario: usuario.idUsuario,
+      numDoc: usuario.numDoc,
+      correo: usuario.correo,
+      rol: usuario.rol,
+      nomPers: persona?.nomPers,
+      idSede: persona?.idSedeRegistro,
     };
   }
 
-  async validateUser(username: string): Promise<UsuarioResponseDto | null> {
-    const usuario = await this.usuarioRepository.findByUsername(username);
+  async validateUser(correo: string): Promise<UsuarioResponseDto | null> {
+    const usuario = await this.usuarioRepository.findByEmail(correo);
     if (!usuario || !usuario.activo) {
       return null;
     }
-    return this.mapToResponse(usuario);
+    return await this.mapToResponse(usuario);
   }
 
   async findAll(): Promise<UsuarioResponseDto[]> {
     const usuarios = await this.usuarioRepository.findAll();
-    return usuarios.map(this.mapToResponse);
+    return await Promise.all(usuarios.map(u => this.mapToResponse(u)));
   }
 
   async findById(id: number): Promise<UsuarioResponseDto> {
@@ -84,12 +116,12 @@ export class AuthService {
     if (!usuario) {
       throw new NotFoundException(`Usuario con ID ${id} no encontrado`);
     }
-    return this.mapToResponse(usuario);
+    return await this.mapToResponse(usuario);
   }
 
   async findByRol(rol: string): Promise<UsuarioResponseDto[]> {
     const usuarios = await this.usuarioRepository.findByRol(rol);
-    return usuarios.map(this.mapToResponse);
+    return await Promise.all(usuarios.map(u => this.mapToResponse(u)));
   }
 
   async update(id: number, updateDto: UpdateUsuarioDto, adminId?: number): Promise<UsuarioResponseDto> {
@@ -124,12 +156,12 @@ export class AuthService {
       await this.activityLogService.logActivity(
         adminId,
         'update_usuario',
-        `Usuario ${usuario.username} modificado: ${changes.join(', ')}`,
+        `Usuario ${usuario.correo} modificado: ${changes.join(', ')}`,
       );
     }
 
     const updated = await this.usuarioRepository.findById(id);
-    return this.mapToResponse(updated!);
+    return await this.mapToResponse(updated!);
   }
 
   async delete(id: number, adminId?: number): Promise<void> {
@@ -145,7 +177,7 @@ export class AuthService {
       await this.activityLogService.logActivity(
         adminId,
         'delete_usuario',
-        `Usuario ${usuario.username} eliminado`,
+        `Usuario ${usuario.correo} eliminado`,
       );
     }
   }
@@ -192,26 +224,30 @@ export class AuthService {
     await this.activityLogService.logActivity(
       adminId,
       'reset_password',
-      `Contraseña del usuario ${usuario.username} restablecida por administrador`,
+      `Contraseña del usuario ${usuario.correo} restablecida por administrador`,
     );
   }
 
-  private mapToResponse(usuario: UsuarioEntity): UsuarioResponseDto {
+  private async mapToResponse(usuario: UsuarioEntity): Promise<UsuarioResponseDto> {
+    // Obtener persona desde la base de datos de sede
+    const persona = await this.personaRepository.findByNumDoc(usuario.numDoc);
+
     return {
       idUsuario: usuario.idUsuario,
       numDoc: usuario.numDoc,
-      username: usuario.username,
+      correo: usuario.correo,
       rol: usuario.rol,
       activo: usuario.activo,
       fechaCreacion: usuario.fechaCreacion,
       fechaActualizacion: usuario.fechaActualizacion,
-      persona: usuario.persona
+      ultimoAcceso: usuario.ultimoAcceso,
+      persona: persona
         ? {
-            numDoc: usuario.persona.numDoc,
-            tipoDoc: usuario.persona.tipoDoc,
-            nomPers: usuario.persona.nomPers,
-            correo: usuario.persona.correo,
-            telPers: usuario.persona.telPers,
+            numDoc: persona.numDoc,
+            tipoDoc: persona.tipoDoc,
+            nomPers: persona.nomPers,
+            correo: persona.correo,
+            telPers: persona.telPers,
           }
         : undefined,
     };

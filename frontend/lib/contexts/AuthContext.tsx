@@ -5,19 +5,17 @@ import { authApi } from '@/lib/api/auth';
 
 export interface User {
   idUsuario: number;
-  username: string;
+  correo: string;
   rol: 'administrador' | 'medico' | 'enfermero' | 'personal_administrativo';
   numDoc: string;
-  persona?: {
-    nomPers: string;
-    correo: string;
-  };
+  nomPers?: string;
+  idSede?: number;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   checkSession: () => Promise<void>;
   isAuthenticated: boolean;
@@ -50,15 +48,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const login = async (username: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
-      const userData = await authApi.login({ username, password });
+      const userData = await authApi.login({ email, password });
       setUser({
         idUsuario: userData.idUsuario,
-        username: userData.username,
+        correo: userData.correo,
         rol: userData.rol,
         numDoc: userData.numDoc,
-        persona: userData.persona,
+        nomPers: userData.nomPers,
+        idSede: userData.idSede,
       });
     } catch (error) {
       console.error('Login error:', error);

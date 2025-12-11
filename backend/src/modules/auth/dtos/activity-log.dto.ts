@@ -4,12 +4,11 @@ export class ActivityLogResponseDto {
   accion: string;
   detalles?: string;
   ipAddress?: string;
+  userAgent?: string;
   fechaAccion: Date;
   usuario?: {
-    username: string;
+    correo: string;
     rol: string;
-    persona?: {
-      nomPers: string;
-    };
+    nomPers?: string;
   };
 }

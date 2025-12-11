@@ -70,6 +70,18 @@ export class AuditoriaService {
     return this.auditoriaRepository.findWithPagination(page, limit);
   }
 
+  async findUltimosAccesosHistoriales(limite: number = 10): Promise<AuditoriaResponseDto[]> {
+    // Buscar accesos a la tabla de historiales (Emite_Hist o similar)
+    const eventos = await this.auditoriaRepository.findByTabla('Emite_Hist');
+    
+    // Ordenar por fecha descendente y limitar
+    const eventosOrdenados = eventos
+      .sort((a, b) => new Date(b.fechaEvento).getTime() - new Date(a.fechaEvento).getTime())
+      .slice(0, limite);
+    
+    return eventosOrdenados.map((evt) => this.mapToResponse(evt));
+  }
+
   private mapToResponse(evento: any): AuditoriaResponseDto {
     return {
       idEvento: evento.idEvento,

@@ -11,15 +11,20 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { MedicamentoService } from '../services/medicamento.service';
 import { CreateMedicamentoDto, UpdateMedicamentoDto, MedicamentoResponseDto, UpdateStockDto } from '../dtos';
+import { AuthGuard, RolesGuard } from '../../auth/guards';
+import { Roles } from '../../auth/decorators';
 
 @Controller('medicamentos')
+@UseGuards(AuthGuard, RolesGuard)
 export class MedicamentoController {
   constructor(private readonly medicamentoService: MedicamentoService) {}
 
   @Post()
+  @Roles('administrador')
   @HttpCode(HttpStatus.CREATED)
   async create(
     @Body() createMedicamentoDto: CreateMedicamentoDto,
@@ -28,6 +33,7 @@ export class MedicamentoController {
   }
 
   @Get()
+  @Roles('administrador', 'medico', 'enfermero', 'personal_administrativo')
   async findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
@@ -82,6 +88,7 @@ export class MedicamentoController {
   }
 
   @Put(':codigo')
+  @Roles('administrador', 'medico')
   async update(
     @Param('codigo', ParseIntPipe) codigo: number,
     @Body() updateMedicamentoDto: UpdateMedicamentoDto,
@@ -98,6 +105,7 @@ export class MedicamentoController {
   }
 
   @Delete(':codigo')
+  @Roles('administrador')
   @HttpCode(HttpStatus.NO_CONTENT)
   async delete(@Param('codigo', ParseIntPipe) codigo: number): Promise<void> {
     return this.medicamentoService.delete(codigo);

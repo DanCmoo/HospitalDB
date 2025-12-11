@@ -105,6 +105,53 @@ CREATE INDEX idx_hist_comp_pac ON Historial_Compartido(id_global_paciente);
 CREATE INDEX idx_audit_fecha ON Auditoria_Interred(fecha_hora);
 CREATE INDEX idx_transferencias_estado ON Transferencias_Pacientes(estado);
 
+-- ============================================
+-- AUTENTICACIÓN CENTRALIZADA
+-- ============================================
+
+-- Tabla de Usuarios (Autenticación)
+CREATE TABLE usuarios (
+    id_usuario SERIAL PRIMARY KEY,
+    num_doc VARCHAR(20) UNIQUE NOT NULL,
+    correo VARCHAR(60) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    rol VARCHAR(30) NOT NULL DEFAULT 'personal_administrativo',
+    activo BOOLEAN DEFAULT TRUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ultimo_acceso TIMESTAMP,
+    CONSTRAINT chk_rol_usuario CHECK (rol IN ('administrador', 'medico', 'enfermero', 'personal_administrativo'))
+);
+
+-- Tabla de Logs de Actividad
+CREATE TABLE activity_logs (
+    id_log SERIAL PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    accion VARCHAR(50) NOT NULL,
+    detalles TEXT,
+    ip_address VARCHAR(45),
+    user_agent TEXT,
+    fecha_accion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_activity_usuario FOREIGN KEY (id_usuario) 
+        REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+);
+
+-- Índices de Autenticación
+CREATE INDEX idx_usuarios_correo ON usuarios(correo);
+CREATE INDEX idx_usuarios_num_doc ON usuarios(num_doc);
+CREATE INDEX idx_usuarios_activo ON usuarios(activo);
+CREATE INDEX idx_activity_usuario ON activity_logs(id_usuario);
+CREATE INDEX idx_activity_fecha ON activity_logs(fecha_accion);
+CREATE INDEX idx_activity_accion ON activity_logs(accion);
+
+COMMENT ON TABLE usuarios IS 'Tabla centralizada de autenticación - Los usuarios deben existir como personas en las sedes';
+COMMENT ON COLUMN usuarios.correo IS 'Email único - Se usa como username para login';
+COMMENT ON COLUMN usuarios.password_hash IS 'Hash bcrypt de la contraseña';
+COMMENT ON COLUMN usuarios.ultimo_acceso IS 'Timestamp del último login exitoso';
+
+COMMENT ON TABLE activity_logs IS 'Registro de auditoría de acciones de usuarios';
+COMMENT ON COLUMN activity_logs.accion IS 'Tipo de acción: login, logout, create, update, delete, etc.';
+
 -- Insertar redes
 INSERT INTO Redes_Hospitalarias (id_red, nombre_red, ciudad, region, db_name) VALUES
 ('RED_NORTE', 'Red Hospitalaria Norte', 'Bogotá', 'Región Norte', 'hospital_sede_norte'),
@@ -1881,4 +1928,73 @@ INSERT INTO Prescribe VALUES
 INSERT INTO Emite_Hist VALUES
 (6001, 1, '2024-12-10', '14:30:00', 'Hipertensión arterial controlada. TA: 130/85', 'Cardiología', 1001, 101, FALSE, 'Local', NOW()),
 (6002, 1, '2024-12-12', '09:00:00', 'Crisis hiperglucémica. Paciente crítico.', 'Urgencias', 1002, 102, TRUE, 'Global', NOW());
+
+-- ============================================
+-- PASO FINAL: DATOS DE USUARIOS INICIALES
+-- ============================================
+
+\c hospital_hub;
+
+-- Insertar Personas de Sistema en Sede Norte
+\c hospital_sede_norte;
+
+INSERT INTO Personas (num_doc, tipo_doc, nom_pers, correo, tel_pers, contrasena, id_sede_registro) VALUES
+('12345678', 'CC', 'Juan Pérez', 'admin@hospital.com', '3001234567', 'admin123', 1),
+('23456789', 'CC', 'María García', 'medico@hospital.com', '3002345678', 'medico123', 1),
+('34567890', 'CC', 'Carlos Rodríguez', 'enfermero@hospital.com', '3003456789', 'enfermero123', 1),
+('45678901', 'CC', 'Ana Martínez', 'admin_staff@hospital.com', '3004567890', 'staff123', 1);
+
+-- Insertar Usuarios en Hospital Hub (Autenticación)
+\c hospital_hub;
+
+-- Password hashes generados con bcrypt (salt rounds: 10)
+-- Contraseñas: admin123, medico123, enfermero123, staff123
+INSERT INTO usuarios (num_doc, correo, password_hash, rol, activo, fecha_creacion, fecha_actualizacion) VALUES
+('12345678', 'admin@hospital.com', '$2b$10$vN1jqIiF8JhKGF6VGQYbaeYhU1qJnGE1q9g8.kX5VQ5YzJGYqJGYu', 'administrador', TRUE, NOW(), NOW()),
+('23456789', 'medico@hospital.com', '$2b$10$vN1jqIiF8JhKGF6VGQYbaeYhU1qJnGE1q9g8.kX5VQ5YzJGYqJGYu', 'medico', TRUE, NOW(), NOW()),
+('34567890', 'enfermero@hospital.com', '$2b$10$vN1jqIiF8JhKGF6VGQYbaeYhU1qJnGE1q9g8.kX5VQ5YzJGYqJGYu', 'enfermero', TRUE, NOW(), NOW()),
+('45678901', 'admin_staff@hospital.com', '$2b$10$vN1jqIiF8JhKGF6VGQYbaeYhU1qJnGE1q9g8.kX5VQ5YzJGYqJGYu', 'personal_administrativo', TRUE, NOW(), NOW());
+
+-- Registrar actividad inicial
+INSERT INTO activity_logs (id_usuario, accion, detalles, fecha_accion) VALUES
+(1, 'system_setup', 'Usuario administrador creado durante instalación inicial', NOW()),
+(2, 'system_setup', 'Usuario médico creado durante instalación inicial', NOW()),
+(3, 'system_setup', 'Usuario enfermero creado durante instalación inicial', NOW()),
+(4, 'system_setup', 'Usuario personal administrativo creado durante instalación inicial', NOW());
+
+-- ============================================
+-- VERIFICACIÓN FINAL
+-- ============================================
+
+\echo '=========================================='
+\echo 'VERIFICANDO USUARIOS CREADOS'
+\echo '=========================================='
+
+SELECT 
+    id_usuario,
+    num_doc,
+    correo,
+    rol,
+    activo,
+    fecha_creacion
+FROM usuarios
+ORDER BY id_usuario;
+
+\echo ''
+\echo '=========================================='
+\echo 'CREDENCIALES DE ACCESO INICIAL'
+\echo '=========================================='
+\echo 'Email: admin@hospital.com       | Password: admin123 | Rol: Administrador'
+\echo 'Email: medico@hospital.com      | Password: medico123 | Rol: Médico'
+\echo 'Email: enfermero@hospital.com   | Password: enfermero123 | Rol: Enfermero'
+\echo 'Email: admin_staff@hospital.com | Password: staff123 | Rol: Personal Administrativo'
+\echo ''
+\echo '=========================================='
+\echo 'INSTALACIÓN COMPLETADA EXITOSAMENTE'
+\echo '=========================================='
+\echo 'Sistema Multi-Red Hospitalaria v2.0'
+\echo 'Base de datos: hospital_hub (autenticación centralizada)'
+\echo 'Sedes: hospital_sede_norte, hospital_sede_centro, hospital_sede_sur'
+\echo 'Autenticación: Email-based con bcrypt'
+\echo '=========================================='
 

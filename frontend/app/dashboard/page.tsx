@@ -106,6 +106,14 @@ function DashboardContent() {
               Generar reportes en PDF
             </p>
           </a>
+          <a href="/estadisticas" className="bg-gray-800 p-6 rounded-lg border-2 border-green-600 hover:border-green-500 transition-all cursor-pointer">
+            <h3 className="text-xl font-semibold text-green-400 mb-2">
+              📈 Estadísticas
+            </h3>
+            <p className="text-gray-400">
+              Análisis y métricas avanzadas
+            </p>
+          </a>
           {user?.rol === 'administrador' && (
             <a href="/admin" className="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-lg border-2 border-purple-500 hover:border-purple-400 transition-all cursor-pointer">
               <h3 className="text-xl font-semibold text-white mb-2">

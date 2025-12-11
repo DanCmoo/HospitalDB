@@ -40,13 +40,9 @@ export class ActivityLogService {
       fechaAccion: log.fechaAccion,
       usuario: log.usuario
         ? {
-            username: log.usuario.username,
+            correo: log.usuario.correo,
             rol: log.usuario.rol,
-            persona: log.usuario.persona
-              ? {
-                  nomPers: log.usuario.persona.nomPers,
-                }
-              : undefined,
+            nomPers: log.usuario.nomPers,
           }
         : undefined,
     };

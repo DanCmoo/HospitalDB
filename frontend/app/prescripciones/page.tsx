@@ -7,8 +7,9 @@ import { agendaCitasApi } from '@/lib/api/agenda-citas';
 import { Prescribe, CreatePrescribeDto, UpdatePrescribeDto } from '@/lib/types/prescribe';
 import { Medicamento } from '@/lib/types/medicamento';
 import { AgendaCita } from '@/lib/types/agenda-cita';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function PrescripcionesPage() {
+function PrescripcionesContent() {
   const [prescripciones, setPrescripciones] = useState<Prescribe[]>([]);
   const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
   const [citas, setCitas] = useState<AgendaCita[]>([]);
@@ -332,5 +333,13 @@ export default function PrescripcionesPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PrescripcionesPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero']}>
+      <PrescripcionesContent />
+    </ProtectedRoute>
   );
 }

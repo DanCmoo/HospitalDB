@@ -6,8 +6,9 @@ import { Sede, CreateSedeRequest, UpdateSedeRequest } from '@/types/sede';
 import SedeForm from '@/components/sedes/SedeForm';
 import SedeTable from '@/components/sedes/SedeTable';
 import ErrorMessage from '@/components/common/ErrorMessage';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function SedesPage() {
+function SedesContent() {
   const [sedes, setSedes] = useState<Sede[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -242,5 +243,13 @@ export default function SedesPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SedesPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <SedesContent />
+    </ProtectedRoute>
   );
 }

@@ -6,8 +6,9 @@ import { medicamentosApi } from '@/lib/api/medicamentos';
 import MedicamentoForm from '@/components/medicamentos/MedicamentoForm';
 import MedicamentoTable from '@/components/medicamentos/MedicamentoTable';
 import StockModal from '@/components/medicamentos/StockModal';
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 
-export default function MedicamentosPage() {
+function MedicamentosContent() {
   const [medicamentos, setMedicamentos] = useState<Medicamento[]>([]);
   const [filteredMedicamentos, setFilteredMedicamentos] = useState<Medicamento[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -224,5 +225,13 @@ export default function MedicamentosPage() {
         Total de medicamentos: {filteredMedicamentos.length} de {medicamentos.length}
       </div>
     </div>
+  );
+}
+
+export default function MedicamentosPage() {
+  return (
+    <ProtectedRoute allowedRoles={['administrador', 'medico', 'enfermero', 'personal_administrativo']}>
+      <MedicamentosContent />
+    </ProtectedRoute>
   );
 }

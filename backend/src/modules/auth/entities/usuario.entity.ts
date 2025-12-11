@@ -9,8 +9,8 @@ export class UsuarioEntity {
   @Column({ name: 'num_doc', type: 'varchar', length: 20, unique: true })
   numDoc: string;
 
-  @Column({ name: 'username', type: 'varchar', length: 50, unique: true })
-  username: string;
+  @Column({ name: 'correo', type: 'varchar', length: 60, unique: true })
+  correo: string;
 
   @Column({ name: 'password_hash', type: 'varchar', length: 255 })
   passwordHash: string;
@@ -32,7 +32,10 @@ export class UsuarioEntity {
   @UpdateDateColumn({ name: 'fecha_actualizacion' })
   fechaActualizacion: Date;
 
-  @ManyToOne(() => PersonaEntity)
-  @JoinColumn({ name: 'num_doc' })
-  persona: PersonaEntity;
+  @Column({ name: 'ultimo_acceso', type: 'timestamp', nullable: true })
+  ultimoAcceso: Date;
+
+  // Nota: La relación con PersonaEntity no se define aquí porque PersonaEntity
+  // está en una base de datos diferente (hospital_sede_*) y UsuarioEntity está
+  // en hospital_hub. La relación se hace manualmente via num_doc cuando sea necesario.
 }
