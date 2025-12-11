@@ -18,6 +18,9 @@ export class PacienteEntity {
   @Column({ type: 'varchar', length: 20 })
   genero: string;
 
+  @Column({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @ManyToOne(() => PersonaEntity, (persona) => persona.pacientes)
   @JoinColumn({ name: 'num_doc' })
   persona: PersonaEntity;

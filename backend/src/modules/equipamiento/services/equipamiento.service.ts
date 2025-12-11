@@ -4,6 +4,7 @@ import { EmpleadoRepository } from '../../empleados/repositories/empleado.reposi
 import { DepartamentoRepository } from '../../departamentos/repositories/departamento.repository';
 import { CreateEquipamientoDto, UpdateEquipamientoDto, EquipamientoResponseDto } from '../dtos';
 import { EquipamientoEntity } from '../entities/equipamiento.entity';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class EquipamientoService {
@@ -44,8 +45,12 @@ export class EquipamientoService {
 
     const { departamentos, ...equipamientoData } = createEquipamientoDto;
 
+    // Auto-asignar id_sede
+    const idSede = SedeConfig.getIdSede();
+
     const equipamientoToCreate: any = {
       ...equipamientoData,
+      idSede,
     };
 
     if (createEquipamientoDto.fechaMant) {

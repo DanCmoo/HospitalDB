@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { ActivityLogEntity } from '../entities/activity-log.entity';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class ActivityLogRepository extends Repository<ActivityLogEntity> {
@@ -14,7 +15,11 @@ export class ActivityLogRepository extends Repository<ActivityLogEntity> {
     detalles?: string;
     ipAddress?: string;
   }): Promise<ActivityLogEntity> {
-    const log = this.create(data);
+    const idSede = SedeConfig.getIdSede();
+    const log = this.create({
+      ...data,
+      idSede,
+    });
     return await this.save(log);
   }
 

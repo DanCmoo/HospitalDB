@@ -9,6 +9,9 @@ export class ActivityLogEntity {
   @Column({ name: 'id_usuario' })
   idUsuario: number;
 
+  @Column({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @Column({ length: 100 })
   accion: string;
 

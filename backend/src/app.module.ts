@@ -25,10 +25,12 @@ import { ReportesModule } from './modules/reportes/reportes.module';
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
+      ignoreEnvFile: false,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useClass: DatabaseConfig,
+      inject: [DatabaseConfig],
     }),
     AuthModule,
     HealthModule,

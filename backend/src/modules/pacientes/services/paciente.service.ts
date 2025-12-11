@@ -3,6 +3,7 @@ import { PacienteRepository } from '../repositories/paciente.repository';
 import { PersonaRepository } from '../../personas/repositories/persona.repository';
 import { CreatePacienteDto, UpdatePacienteDto, PacienteResponseDto } from '../dtos';
 import { PacienteEntity } from '../entities/paciente.entity';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class PacienteService {
@@ -36,9 +37,13 @@ export class PacienteService {
       );
     }
 
+    // Auto-asignar id_sede
+    const idSede = SedeConfig.getIdSede();
+
     const entity = await this.pacienteRepository.create({
       ...createPacienteDto,
       fechaNac: new Date(createPacienteDto.fechaNac),
+      idSede,
     });
 
     return this.mapEntityToDto(entity);

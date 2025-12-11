@@ -16,6 +16,9 @@ export class EquipamientoEntity {
   @Column({ name: 'fecha_mant', type: 'date', nullable: true })
   fechaMant: Date;
 
+  @Column({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @Column({ name: 'id_emp', type: 'int' })
   idEmp: number;
 

@@ -13,6 +13,7 @@ import {
 } from '../dtos';
 import { PersonaEntity } from '../entities/persona.entity';
 import { PaginationResponseDto } from '../../../common/utils/pagination.interface';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class PersonaService {
@@ -45,8 +46,14 @@ export class PersonaService {
       }
     }
 
-    const entity = await this.personaRepository.create(createPersonaDto);
-    this.logger.debug(`Persona created successfully: ${entity.numDoc}`);
+    // Auto-asignar id_sede
+    const idSede = SedeConfig.getIdSede();
+    
+    const entity = await this.personaRepository.create({
+      ...createPersonaDto,
+      idSede,
+    });
+    this.logger.debug(`Persona created successfully: ${entity.numDoc} in sede ${idSede}`);
     return this.mapEntityToDto(entity);
   }
 

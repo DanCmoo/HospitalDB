@@ -19,6 +19,9 @@ export class PersonaEntity {
   @Column({ type: 'varchar', length: 20, nullable: true, name: 'tel_pers' })
   telPers: string;
 
+  @Column({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   // Relaciones
   @OneToMany(() => PacienteEntity, (paciente) => paciente.persona)
   pacientes: PacienteEntity[];
