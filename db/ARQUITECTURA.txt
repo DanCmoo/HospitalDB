@@ -1,0 +1,186 @@
+```
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                  SISTEMA MULTI-RED HOSPITALARIA                           ║
+║                  Arquitectura Distribuida PostgreSQL                      ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+                          ┌─────────────────────────┐
+                          │    HOSPITAL_HUB         │
+                          │   (Base Central)        │
+                          │                         │
+                          │ ┌─────────────────────┐ │
+                          │ │ Índice_Pacientes_   │ │
+                          │ │    Global           │ │
+                          │ └─────────────────────┘ │
+                          │ ┌─────────────────────┐ │
+                          │ │ Historial_          │ │
+                          │ │    Compartido       │ │
+                          │ └─────────────────────┘ │
+                          │ ┌─────────────────────┐ │
+                          │ │ Transferencias_     │ │
+                          │ │    Pacientes        │ │
+                          │ └─────────────────────┘ │
+                          │ ┌─────────────────────┐ │
+                          │ │ Auditoria_Interred  │ │
+                          │ └─────────────────────┘ │
+                          │ ┌─────────────────────┐ │
+                          │ │ Redes_Hospitalarias │ │
+                          │ └─────────────────────┘ │
+                          └───────────┬─────────────┘
+                                      │
+                          ┌───────────┼───────────┐
+                          │           │           │
+                    ┌─────▼─────┐ ┌──▼──────┐ ┌─▼─────────┐
+                    │   SEDE    │ │  SEDE   │ │   SEDE    │
+                    │   NORTE   │ │ CENTRO  │ │    SUR    │
+                    │  (ID: 1)  │ │ (ID: 2) │ │  (ID: 3)  │
+                    └───────────┘ └─────────┘ └───────────┘
+                         │             │            │
+        ┌────────────────┼─────────────┼────────────┼─────────────────┐
+        │                │             │            │                 │
+  ┌─────▼─────┐    ┌─────▼─────┐ ┌────▼─────┐ ┌───▼──────┐  ┌──────▼──────┐
+  │ Pacientes │    │ Empleados │ │ Agenda_  │ │ Emite_   │  │ Equipamiento│
+  │           │    │           │ │  Citas   │ │  Hist    │  │             │
+  └───────────┘    └───────────┘ └──────────┘ └──────────┘  └─────────────┘
+        │                │             │            │                 │
+  ┌─────▼─────────────────────────────────────────────────────────────┐
+  │           Tablas de Replicación (*_Red)                           │
+  │   • Pacientes_Red   • Historial_Red   • Equipamiento_Red          │
+  └───────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+CARACTERÍSTICAS PRINCIPALES:
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ 1. REPLICACIÓN AUTOMÁTICA                                               │
+│    ├─ Triggers en INSERT/UPDATE/DELETE                                  │
+│    ├─ Tabla Control_Replicacion por sede                                │
+│    └─ Datos críticos se replican automáticamente                        │
+│                                                                          │
+│ 2. FOREIGN DATA WRAPPERS (FDW)                                          │
+│    ├─ Hub → Sedes (consultas directas)                                  │
+│    ├─ Sedes → Hub (sincronización)                                      │
+│    └─ Consultas distribuidas en tiempo real                             │
+│                                                                          │
+│ 3. VISTAS CONSOLIDADAS                                                  │
+│    ├─ v_todos_pacientes_red (hub)                                       │
+│    ├─ v_pacientes_red (cada sede)                                       │
+│    ├─ v_historial_completo (cada sede)                                  │
+│    └─ v_dashboard_red (cada sede)                                       │
+│                                                                          │
+│ 4. CONTROL DE ACCESO                                                    │
+│    ├─ administrador (acceso total)                                      │
+│    ├─ medico (clínico completo)                                         │
+│    ├─ enfermero (lectura + citas limitadas)                             │
+│    └─ personal_administrativo (pacientes + citas)                       │
+│                                                                          │
+│ 5. AUDITORÍA COMPLETA                                                   │
+│    ├─ Auditoria_Interred (hub)                                          │
+│    ├─ Auditoria_Accesos (cada sede)                                     │
+│    └─ Timestamps automáticos                                            │
+└─────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+FLUJO DE DATOS:
+
+1. REGISTRO LOCAL (Sede Norte)
+   ↓
+   INSERT INTO Pacientes → Trigger → Control_Replicacion
+   ↓
+   Datos marcados para replicación
+   ↓
+   Sincronización → Indice_Pacientes_Global (Hub)
+   ↓
+   Disponible para consulta desde otras sedes
+
+2. HISTORIAL COMPARTIDO
+   ↓
+   Médico crea historial con compartido=TRUE
+   ↓
+   Trigger automático
+   ↓
+   Registro en Historial_Compartido (Hub)
+   ↓
+   Visible en v_historial_completo de todas las sedes
+
+3. TRANSFERENCIA ENTRE SEDES
+   ↓
+   Solicitud en Transferencias_Pacientes (Hub)
+   ↓
+   Estados: Pendiente → Aprobada → En Proceso → Completada
+   ↓
+   Auditoría registra toda la operación
+   ↓
+   Paciente accesible en ambas sedes
+
+═══════════════════════════════════════════════════════════════════════════
+
+DATOS DE EJEMPLO INCLUIDOS:
+
+Hub Central:
+  • 3 Redes registradas (Norte, Centro, Sur)
+  • 4 Pacientes en índice global
+  • 2 Historiales compartidos
+  • 1 Auditoría de prueba
+
+Sede Norte (ID: 1):
+  • 3 Pacientes
+  • 5 Empleados
+  • 2 Citas
+  • 4 Equipos
+  • 2 Historiales
+
+Sede Centro (ID: 2):
+  • 2 Pacientes
+  • 2 Empleados
+  • 1 Cita
+  • 2 Equipos
+  • 1 Historial
+
+Sede Sur (ID: 3):
+  • 2 Pacientes
+  • 1 Empleado
+  • 1 Cita urgente
+  • 2 Equipos
+  • 1 Historial compartido
+
+═══════════════════════════════════════════════════════════════════════════
+
+INSTALACIÓN:
+
+  psql -U postgres -f ejecutar_todo.sql
+
+O desde pgAdmin:
+  1. Query Tool
+  2. Abrir archivo ejecutar_todo.sql
+  3. Execute (F5)
+
+═══════════════════════════════════════════════════════════════════════════
+
+VERIFICACIÓN RÁPIDA:
+
+-- Ver todas las bases creadas
+\l hospital*
+
+-- Conectar al hub
+\c hospital_hub
+
+-- Ver pacientes de toda la red
+SELECT * FROM v_todos_pacientes_red;
+
+-- Ver redes registradas
+SELECT * FROM Redes_Hospitalarias;
+
+-- Conectar a una sede
+\c hospital_sede_norte
+
+-- Ver dashboard
+SELECT * FROM v_dashboard_red;
+
+-- Ver pacientes locales y remotos
+SELECT * FROM v_pacientes_red;
+
+═══════════════════════════════════════════════════════════════════════════
+```
