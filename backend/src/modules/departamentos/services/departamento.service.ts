@@ -3,6 +3,7 @@ import { DepartamentoRepository } from '../repositories/departamento.repository'
 import { SedeRepository } from '../../sedes/repositories/sede.repository';
 import { CreateDepartamentoDto, UpdateDepartamentoDto, DepartamentoResponseDto } from '../dtos';
 import { DepartamentoEntity } from '../entities/departamento.entity';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class DepartamentoService {
@@ -12,9 +13,11 @@ export class DepartamentoService {
   ) {}
 
   async create(createDepartamentoDto: CreateDepartamentoDto): Promise<DepartamentoResponseDto> {
+    const idSede = createDepartamentoDto.idSede || SedeConfig.getIdSede();
     // Verificar que no exista un departamento con el mismo nombre
     const existing = await this.departamentoRepository.findByNombre(
       createDepartamentoDto.nomDept,
+      idSede,
     );
     if (existing) {
       throw new ConflictException(
@@ -39,8 +42,9 @@ export class DepartamentoService {
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
-  async findByNombre(nomDept: string): Promise<DepartamentoResponseDto> {
-    const entity = await this.departamentoRepository.findByNombre(nomDept);
+  async findByNombre(nomDept: string, idSede?: number): Promise<DepartamentoResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const entity = await this.departamentoRepository.findByNombre(nomDept, sede);
     if (!entity) {
       throw new NotFoundException(`Departamento "${nomDept}" no encontrado`);
     }
@@ -60,33 +64,36 @@ export class DepartamentoService {
   async update(
     nomDept: string,
     updateDepartamentoDto: UpdateDepartamentoDto,
+    idSede?: number,
   ): Promise<DepartamentoResponseDto> {
-    const existing = await this.departamentoRepository.findByNombre(nomDept);
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.departamentoRepository.findByNombre(nomDept, sede);
     if (!existing) {
       throw new NotFoundException(`Departamento "${nomDept}" no encontrado`);
     }
 
     // Si se está actualizando la sede, verificar que exista
     if (updateDepartamentoDto.idSede) {
-      const sede = await this.sedeRepository.findById(updateDepartamentoDto.idSede);
-      if (!sede) {
+      const sedeEntity = await this.sedeRepository.findById(updateDepartamentoDto.idSede);
+      if (!sedeEntity) {
         throw new NotFoundException(
           `Sede con ID ${updateDepartamentoDto.idSede} no encontrada`,
         );
       }
     }
 
-    const updated = await this.departamentoRepository.update(nomDept, updateDepartamentoDto);
+    const updated = await this.departamentoRepository.update(nomDept, sede, updateDepartamentoDto);
     return this.mapEntityToDto(updated);
   }
 
-  async delete(nomDept: string): Promise<void> {
-    const existing = await this.departamentoRepository.findByNombre(nomDept);
+  async delete(nomDept: string, idSede?: number): Promise<void> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.departamentoRepository.findByNombre(nomDept, sede);
     if (!existing) {
       throw new NotFoundException(`Departamento "${nomDept}" no encontrado`);
     }
 
-    await this.departamentoRepository.delete(nomDept);
+    await this.departamentoRepository.delete(nomDept, sede);
   }
 
   async count(): Promise<number> {

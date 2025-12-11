@@ -2,16 +2,16 @@ import { Entity, Column, PrimaryColumn, ManyToOne, ManyToMany, JoinColumn } from
 import { SedeEntity } from '../../sedes/entities/sede.entity';
 import { EquipamientoEntity } from '../../equipamiento/entities/equipamiento.entity';
 
-@Entity('Departamentos')
+@Entity('departamentos')
 export class DepartamentoEntity {
-  @PrimaryColumn({ type: 'varchar', length: 30 })
+  @PrimaryColumn({ type: 'varchar', length: 30, name: 'nom_dept' })
   nomDept: string;
 
-  @Column({ type: 'int' })
+  @PrimaryColumn({ type: 'int', name: 'id_sede' })
   idSede: number;
 
   @ManyToOne(() => SedeEntity, (sede) => sede.departamentos)
-  @JoinColumn({ name: 'idSede' })
+  @JoinColumn({ name: 'id_sede' })
   sede: SedeEntity;
 
   @ManyToMany(() => EquipamientoEntity, (equipamiento) => equipamiento.departamentos)

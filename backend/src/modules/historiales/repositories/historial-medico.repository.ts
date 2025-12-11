@@ -17,24 +17,24 @@ export class HistorialMedicoRepository {
     });
   }
 
-  async findById(codHist: number): Promise<HistorialMedicoEntity | null> {
+  async findById(codHist: number, idSede: number): Promise<HistorialMedicoEntity | null> {
     return this.repository.findOne({
-      where: { codHist },
+      where: { codHist, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona'],
     });
   }
 
-  async findByPaciente(codPac: number): Promise<HistorialMedicoEntity[]> {
+  async findByPaciente(codPac: number, idSede: number): Promise<HistorialMedicoEntity[]> {
     return this.repository.find({
-      where: { codPac },
+      where: { codPac, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona'],
       order: { fecha: 'DESC', hora: 'DESC' },
     });
   }
 
-  async findByEmpleado(idEmp: number): Promise<HistorialMedicoEntity[]> {
+  async findByEmpleado(idEmp: number, idSede: number): Promise<HistorialMedicoEntity[]> {
     return this.repository.find({
-      where: { idEmp },
+      where: { idEmp, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona'],
       order: { fecha: 'DESC', hora: 'DESC' },
     });
@@ -71,13 +71,13 @@ export class HistorialMedicoRepository {
     return this.repository.save(entity);
   }
 
-  async update(codHist: number, data: Partial<HistorialMedicoEntity>): Promise<HistorialMedicoEntity> {
-    await this.repository.update(codHist, data);
-    return this.findById(codHist);
+  async update(codHist: number, idSede: number, data: Partial<HistorialMedicoEntity>): Promise<HistorialMedicoEntity> {
+    await this.repository.update({ codHist, idSede }, data);
+    return this.findById(codHist, idSede);
   }
 
-  async delete(codHist: number): Promise<void> {
-    await this.repository.delete(codHist);
+  async delete(codHist: number, idSede: number): Promise<void> {
+    await this.repository.delete({ codHist, idSede });
   }
 
   async count(): Promise<number> {

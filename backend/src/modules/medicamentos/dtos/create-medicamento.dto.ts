@@ -18,4 +18,8 @@ export class CreateMedicamentoDto {
   @IsOptional()
   @IsString()
   descripcion?: string;
+
+  @IsInt()
+  @Min(1)
+  idSede: number;
 }

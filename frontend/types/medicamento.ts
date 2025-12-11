@@ -4,6 +4,7 @@ export interface Medicamento {
   stock: number;
   proveedor?: string;
   descripcion?: string;
+  idSede: number;
 }
 
 export interface CreateMedicamentoDto {
@@ -12,6 +13,7 @@ export interface CreateMedicamentoDto {
   stock: number;
   proveedor?: string;
   descripcion?: string;
+  idSede: number;
 }
 
 export interface UpdateMedicamentoDto {

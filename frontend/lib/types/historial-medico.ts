@@ -1,12 +1,15 @@
 export interface HistorialMedico {
   codHist: number;
+  idSede: number;
   fecha: string;
   hora: string;
   diagnostico: string;
-  idSede: number;
   nomDept?: string;
   idEmp: number;
   codPac: number;
+  compartido?: boolean;
+  nivelAcceso?: string;
+  fechaCreacion?: string;
   empleado?: {
     idEmp: number;
     cargo: string;
@@ -30,13 +33,15 @@ export interface HistorialMedico {
 
 export interface CreateHistorialMedicoDto {
   codHist: number;
+  idSede: number;
   fecha: string;
   hora: string;
   diagnostico: string;
-  idSede: number;
   nomDept?: string;
   idEmp: number;
   codPac: number;
+  compartido?: boolean;
+  nivelAcceso?: string;
 }
 
 export interface UpdateHistorialMedicoDto {
@@ -44,4 +49,6 @@ export interface UpdateHistorialMedicoDto {
   hora?: string;
   diagnostico?: string;
   nomDept?: string;
+  compartido?: boolean;
+  nivelAcceso?: string;
 }

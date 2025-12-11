@@ -169,7 +169,7 @@ export default function AgendaCitasPage() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Agenda de Citas</h1>
+        <h1 className="text-3xl font-bold text-white">Agenda de Citas</h1>
         <button
           onClick={() => {
             resetForm();
@@ -187,12 +187,12 @@ export default function AgendaCitasPage() {
           placeholder="Buscar por servicio, empleado o paciente..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border rounded"
+          className="flex-1 px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         />
         <select
           value={estadoFilter}
           onChange={(e) => setEstadoFilter(e.target.value)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         >
           <option value="">Todos los estados</option>
           <option value="Programada">Programada</option>
@@ -204,38 +204,38 @@ export default function AgendaCitasPage() {
           type="date"
           value={fechaFilter}
           onChange={(e) => setFechaFilter(e.target.value)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         />
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 overflow-hidden">
         <table className="min-w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hora</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Servicio</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Empleado</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Fecha</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Hora</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Servicio</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Estado</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Empleado</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Paciente</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-700">
             {filteredCitas.map((cita) => (
-              <tr key={cita.idCita} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{cita.idCita}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{cita.fecha}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{cita.hora}</td>
-                <td className="px-6 py-4 text-sm">{cita.tipoServicio}</td>
+              <tr key={cita.idCita} className="hover:bg-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{cita.idCita}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{cita.fecha}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{cita.hora}</td>
+                <td className="px-6 py-4 text-sm text-white">{cita.tipoServicio}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${getEstadoColor(cita.estado)}`}>
                     {cita.estado}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm">{cita.empleado?.persona?.nomPers || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm">{cita.paciente?.persona?.nomPers || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{cita.empleado?.persona?.nomPers || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{cita.paciente?.persona?.nomPers || 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <button
                     onClick={() => openEditModal(cita)}
@@ -258,51 +258,51 @@ export default function AgendaCitasPage() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">
               {editingCita ? 'Editar Cita' : 'Nueva Cita'}
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Fecha</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Fecha</label>
                   <input
                     type="date"
                     value={formData.fecha}
                     onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Hora</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Hora</label>
                   <input
                     type="time"
                     value={formData.hora}
                     onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Tipo de Servicio</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Tipo de Servicio</label>
                 <input
                   type="text"
                   value={formData.tipoServicio}
                   onChange={(e) => setFormData({ ...formData, tipoServicio: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Estado</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Estado</label>
                 <select
                   value={formData.estado}
                   onChange={(e) => setFormData({ ...formData, estado: e.target.value as EstadoCita })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 >
                   <option value={EstadoCita.Programada}>Programada</option>
@@ -314,11 +314,11 @@ export default function AgendaCitasPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Sede</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Sede</label>
                   <select
                     value={formData.idSede}
                     onChange={(e) => setFormData({ ...formData, idSede: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                     disabled={!!editingCita}
                   >
@@ -331,22 +331,22 @@ export default function AgendaCitasPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Departamento (opcional)</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Departamento (opcional)</label>
                   <input
                     type="text"
                     value={formData.nomDept}
                     onChange={(e) => setFormData({ ...formData, nomDept: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Empleado</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Empleado</label>
                 <select
                   value={formData.idEmp}
                   onChange={(e) => setFormData({ ...formData, idEmp: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                   disabled={!!editingCita}
                 >
@@ -360,11 +360,11 @@ export default function AgendaCitasPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Paciente</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Paciente</label>
                 <select
                   value={formData.codPac}
                   onChange={(e) => setFormData({ ...formData, codPac: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                   disabled={!!editingCita}
                 >
@@ -383,7 +383,7 @@ export default function AgendaCitasPage() {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-600 rounded hover:bg-gray-700 text-gray-300"
                 >
                   Cancelar
                 </button>

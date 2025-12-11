@@ -2,8 +2,10 @@ import {
   IsString,
   IsEmail,
   IsOptional,
+  IsInt,
   Length,
   Matches,
+  Min,
 } from 'class-validator';
 
 export class CreatePersonaDto {
@@ -29,4 +31,8 @@ export class CreatePersonaDto {
   @Length(7, 20)
   @Matches(/^[0-9]+$/, { message: 'El teléfono debe contener solo dígitos' })
   telPers?: string;
+
+  @IsInt()
+  @Min(1)
+  idSedeRegistro: number;
 }

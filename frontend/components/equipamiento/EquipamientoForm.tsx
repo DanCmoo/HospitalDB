@@ -15,6 +15,7 @@ interface EquipamientoFormProps {
 export default function EquipamientoForm({ equipamiento, onSuccess, onCancel }: EquipamientoFormProps) {
   const [formData, setFormData] = useState({
     codEq: 0,
+    idSede: 1,
     nomEq: '',
     estado: '' as EstadoEquipamiento,
     fechaMant: '',

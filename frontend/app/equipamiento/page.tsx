@@ -108,7 +108,7 @@ export default function EquipamientoPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Gestión de Equipamiento</h1>
+        <h1 className="text-3xl font-bold text-white">Gestión de Equipamiento</h1>
         <button
           onClick={handleCreate}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
@@ -118,8 +118,8 @@ export default function EquipamientoPage() {
       </div>
 
       {showForm && (
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-xl font-semibold mb-4">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-2xl border border-gray-700 mb-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">
             {selectedEquipamiento ? 'Editar Equipamiento' : 'Nuevo Equipamiento'}
           </h2>
           <EquipamientoForm
@@ -130,10 +130,10 @@ export default function EquipamientoPage() {
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+      <div className="bg-gray-800 p-6 rounded-lg shadow-2xl border border-gray-700 mb-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Buscar
             </label>
             <input
@@ -141,17 +141,17 @@ export default function EquipamientoPage() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Buscar por nombre, responsable o departamento..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Filtrar por Estado
             </label>
             <select
               value={estadoFilter}
               onChange={(e) => setEstadoFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             >
               <option value="">Todos</option>
               <option value={EstadoEquipamiento.OPERATIVO}>Operativo</option>
@@ -162,7 +162,7 @@ export default function EquipamientoPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-md">
+      <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700">
         <EquipamientoTable
           equipamientos={filteredEquipamientos}
           onEdit={handleEdit}
@@ -170,7 +170,7 @@ export default function EquipamientoPage() {
         />
       </div>
 
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-gray-300">
         Total de equipamiento: {filteredEquipamientos.length} de {equipamientos.length}
       </div>
     </div>

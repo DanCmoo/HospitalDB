@@ -9,6 +9,10 @@ export class CreatePrescribeDto {
 
   @IsInt()
   @Min(1)
+  idSede: number;
+
+  @IsInt()
+  @Min(1)
   dosis: number;
 
   @IsInt()

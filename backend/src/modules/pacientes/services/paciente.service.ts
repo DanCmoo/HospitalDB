@@ -14,7 +14,8 @@ export class PacienteService {
 
   async create(createPacienteDto: CreatePacienteDto): Promise<PacienteResponseDto> {
     // Verificar que el código no exista
-    const existingByCodigo = await this.pacienteRepository.findByCodigo(createPacienteDto.codPac);
+    const idSede = SedeConfig.getIdSede();
+    const existingByCodigo = await this.pacienteRepository.findByCodigo(createPacienteDto.codPac, idSede);
     if (existingByCodigo) {
       throw new ConflictException(
         `Paciente con código ${createPacienteDto.codPac} ya existe`,
@@ -38,8 +39,6 @@ export class PacienteService {
     }
 
     // Auto-asignar id_sede
-    const idSede = SedeConfig.getIdSede();
-
     const entity = await this.pacienteRepository.create({
       ...createPacienteDto,
       fechaNac: new Date(createPacienteDto.fechaNac),
@@ -54,8 +53,9 @@ export class PacienteService {
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
-  async findByCodigo(codPac: number): Promise<PacienteResponseDto> {
-    const entity = await this.pacienteRepository.findByCodigo(codPac);
+  async findByCodigo(codPac: number, idSede?: number): Promise<PacienteResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const entity = await this.pacienteRepository.findByCodigo(codPac, sede);
     if (!entity) {
       throw new NotFoundException(`Paciente con código ${codPac} no encontrado`);
     }
@@ -72,8 +72,9 @@ export class PacienteService {
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
-  async update(codPac: number, updatePacienteDto: UpdatePacienteDto): Promise<PacienteResponseDto> {
-    const existing = await this.pacienteRepository.findByCodigo(codPac);
+  async update(codPac: number, updatePacienteDto: UpdatePacienteDto, idSede?: number): Promise<PacienteResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.pacienteRepository.findByCodigo(codPac, sede);
     if (!existing) {
       throw new NotFoundException(`Paciente con código ${codPac} no encontrado`);
     }
@@ -83,17 +84,18 @@ export class PacienteService {
       updateData.fechaNac = new Date(updatePacienteDto.fechaNac);
     }
 
-    const updated = await this.pacienteRepository.update(codPac, updateData);
+    const updated = await this.pacienteRepository.update(codPac, sede, updateData);
     return this.mapEntityToDto(updated);
   }
 
-  async delete(codPac: number): Promise<void> {
-    const existing = await this.pacienteRepository.findByCodigo(codPac);
+  async delete(codPac: number, idSede?: number): Promise<void> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.pacienteRepository.findByCodigo(codPac, sede);
     if (!existing) {
       throw new NotFoundException(`Paciente con código ${codPac} no encontrado`);
     }
 
-    await this.pacienteRepository.delete(codPac);
+    await this.pacienteRepository.delete(codPac, sede);
   }
 
   async count(): Promise<number> {

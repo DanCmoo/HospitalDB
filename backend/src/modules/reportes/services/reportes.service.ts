@@ -10,6 +10,7 @@ import { EmpleadoRepository } from '../../empleados/repositories/empleado.reposi
 import { DepartamentoRepository } from '../../departamentos/repositories/departamento.repository';
 import { GenerarReportePacienteDto, GenerarReporteSedeDto, GenerarReporteGeneralDto } from '../dtos';
 import { Between, LessThan } from 'typeorm';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class ReportesService {
@@ -29,13 +30,14 @@ export class ReportesService {
    * Genera reporte completo de un paciente
    */
   async generarReportePaciente(dto: GenerarReportePacienteDto): Promise<Buffer> {
-    const paciente = await this.pacienteRepository.findByCodigo(dto.codPac);
+    const idSede = SedeConfig.getIdSede();
+    const paciente = await this.pacienteRepository.findByCodigo(dto.codPac, idSede);
     if (!paciente) {
       throw new NotFoundException(`Paciente con código ${dto.codPac} no encontrado`);
     }
 
     // Obtener historiales
-    let historiales = await this.historialRepository.findByPaciente(dto.codPac);
+    let historiales = await this.historialRepository.findByPaciente(dto.codPac, idSede);
     
     // Filtrar por fechas si se proporcionan
     if (dto.fechaInicio && dto.fechaFin) {
@@ -47,7 +49,7 @@ export class ReportesService {
     }
 
     // Obtener citas
-    let citas = await this.agendaCitaRepository.findByPaciente(dto.codPac);
+    let citas = await this.agendaCitaRepository.findByPaciente(dto.codPac, idSede);
     
     if (dto.fechaInicio && dto.fechaFin) {
       const inicio = new Date(dto.fechaInicio);
@@ -58,7 +60,7 @@ export class ReportesService {
     // Obtener prescripciones a través de las citas
     const citaIds = citas.map((c) => c.idCita);
     const prescripciones = await Promise.all(
-      citaIds.map((idCita) => this.prescribeRepository.findByCita(idCita)),
+      citaIds.map((idCita) => this.prescribeRepository.findByCita(idCita, idSede)),
     );
     const todasPrescripciones = prescripciones.flat();
 
@@ -74,14 +76,13 @@ export class ReportesService {
    * Genera reporte general del hospital
    */
   async generarReporteGeneral(dto: GenerarReporteGeneralDto): Promise<Buffer> {
-    // Obtener estadísticas
+    const idSede = SedeConfig.getIdSede();
     const totalPacientes = await this.pacienteRepository.count();
     const totalEmpleados = await this.empleadoRepository.count();
     const totalSedes = await this.sedeRepository.count();
 
     // Obtener citas
     let citas = await this.agendaCitaRepository.findAll();
-    
     if (dto.fechaInicio && dto.fechaFin) {
       const inicio = new Date(dto.fechaInicio);
       const fin = new Date(dto.fechaFin);
@@ -132,7 +133,6 @@ export class ReportesService {
 
     // Obtener citas de la sede
     let citas = await this.agendaCitaRepository.findBySede(dto.idSede);
-    
     if (dto.fechaInicio && dto.fechaFin) {
       const inicio = new Date(dto.fechaInicio);
       const fin = new Date(dto.fechaFin);

@@ -140,7 +140,7 @@ export default function AuditoriaPage() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Auditoría de Accesos</h1>
+        <h1 className="text-3xl font-bold text-white">Auditoría</h1>
         <div className="flex gap-3">
           <button
             onClick={exportToCSV}
@@ -166,13 +166,13 @@ export default function AuditoriaPage() {
           placeholder="Buscar por acción, tabla, usuario o IP..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border rounded"
+          className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         />
         <div className="grid grid-cols-4 gap-4">
           <select
             value={accionFilter}
             onChange={(e) => setAccionFilter(e.target.value)}
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
           >
             <option value="">Todas las acciones</option>
             <option value="INSERT">INSERT</option>
@@ -183,7 +183,7 @@ export default function AuditoriaPage() {
           <select
             value={tablaFilter}
             onChange={(e) => setTablaFilter(e.target.value)}
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
           >
             <option value="">Todas las tablas</option>
             <option value="Persona">Persona</option>
@@ -198,46 +198,46 @@ export default function AuditoriaPage() {
             placeholder="Fecha inicio"
             value={fechaInicioFilter}
             onChange={(e) => setFechaInicioFilter(e.target.value)}
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
           />
           <input
             type="date"
             placeholder="Fecha fin"
             value={fechaFinFilter}
             onChange={(e) => setFechaFinFilter(e.target.value)}
-            className="px-4 py-2 border rounded"
+            className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
           />
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 overflow-hidden">
         <table className="min-w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Usuario</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acción</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tabla Afectada</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Origen</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Tabla</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Acción</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Usuario</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Fecha</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Detalles</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-700">
             {filteredAuditorias.map((aud) => (
-              <tr key={aud.idEvento} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{aud.idEvento}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">
+              <tr key={aud.idEvento} className="hover:bg-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{aud.idEvento}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
                   {new Date(aud.fechaEvento).toLocaleString('es-ES')}
                 </td>
-                <td className="px-6 py-4 text-sm">{aud.persona?.nomPers || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{aud.persona?.nomPers || 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 py-1 text-xs font-semibold rounded ${getAccionColor(aud.accion)}`}>
                     {aud.accion}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm">{aud.tablaAfectada}</td>
-                <td className="px-6 py-4 text-sm">{aud.ipOrigen || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{aud.tablaAfectada}</td>
+                <td className="px-6 py-4 text-sm text-white">{aud.ipOrigen || 'N/A'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <button
                     onClick={() => handleDelete(aud.idEvento)}
@@ -253,21 +253,21 @@ export default function AuditoriaPage() {
         </table>
       </div>
 
-      <div className="mt-4 text-sm text-gray-600">
+      <div className="mt-4 text-sm text-gray-300">
         Total de registros: {filteredAuditorias.length}
       </div>
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
-            <h2 className="text-2xl font-bold mb-4">Nuevo Registro de Auditoría</h2>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">Nuevo Registro de Auditoría</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Usuario (Documento)</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Usuario (Documento)</label>
                 <select
                   value={formData.numDoc}
                   onChange={(e) => setFormData({ ...formData, numDoc: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 >
                   <option value="">Seleccione un usuario</option>
@@ -281,11 +281,11 @@ export default function AuditoriaPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Acción</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Acción</label>
                   <select
                     value={formData.accion}
                     onChange={(e) => setFormData({ ...formData, accion: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   >
                     <option value="">Seleccione una acción</option>
@@ -296,23 +296,23 @@ export default function AuditoriaPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Fecha del Evento</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Fecha del Evento</label>
                   <input
                     type="datetime-local"
                     value={formData.fechaEvento}
                     onChange={(e) => setFormData({ ...formData, fechaEvento: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Tabla Afectada</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Tabla Afectada</label>
                 <select
                   value={formData.tablaAfectada}
                   onChange={(e) => setFormData({ ...formData, tablaAfectada: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 >
                   <option value="">Seleccione una tabla</option>
@@ -330,12 +330,12 @@ export default function AuditoriaPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">IP Origen (opcional)</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">IP Origen (opcional)</label>
                 <input
                   type="text"
                   value={formData.ipOrigen}
                   onChange={(e) => setFormData({ ...formData, ipOrigen: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   placeholder="192.168.1.1"
                 />
               </div>
@@ -346,7 +346,7 @@ export default function AuditoriaPage() {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-600 rounded hover:bg-gray-700 text-gray-300"
                 >
                   Cancelar
                 </button>

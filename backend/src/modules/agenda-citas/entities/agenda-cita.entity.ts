@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, ManyToOne, OneToMany, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { EmpleadoEntity } from '../../empleados/entities/empleado.entity';
 import { PacienteEntity } from '../../pacientes/entities/paciente.entity';
 import { PrescribeEntity } from '../../prescripciones/entities/prescribe.entity';
@@ -15,6 +15,9 @@ export class AgendaCitaEntity {
   @PrimaryColumn({ name: 'id_cita', type: 'int' })
   idCita: number;
 
+  @PrimaryColumn({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @Column({ name: 'fecha', type: 'date' })
   fecha: Date;
 
@@ -27,9 +30,6 @@ export class AgendaCitaEntity {
   @Column({ name: 'estado', type: 'varchar', length: 15 })
   estado: string;
 
-  @Column({ name: 'id_sede', type: 'int' })
-  idSede: number;
-
   @Column({ name: 'nom_dept', type: 'varchar', length: 30, nullable: true })
   nomDept: string;
 
@@ -39,12 +39,18 @@ export class AgendaCitaEntity {
   @Column({ name: 'cod_pac', type: 'int' })
   codPac: number;
 
+  @CreateDateColumn({ name: 'fecha_creacion', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  fechaCreacion: Date;
+
+  @UpdateDateColumn({ name: 'ultima_modificacion', type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  ultimaModificacion: Date;
+
   @ManyToOne(() => EmpleadoEntity)
-  @JoinColumn({ name: 'id_emp' })
+  @JoinColumn([{ name: 'id_emp', referencedColumnName: 'idEmp' }, { name: 'id_sede', referencedColumnName: 'idSede' }])
   empleado: EmpleadoEntity;
 
   @ManyToOne(() => PacienteEntity)
-  @JoinColumn({ name: 'cod_pac' })
+  @JoinColumn([{ name: 'cod_pac', referencedColumnName: 'codPac' }, { name: 'id_sede', referencedColumnName: 'idSede' }])
   paciente: PacienteEntity;
 
   @OneToMany(() => PrescribeEntity, (prescribe) => prescribe.cita)

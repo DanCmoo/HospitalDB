@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { HistorialMedicoRepository } from '../repositories/historial-medico.repository';
 import { CreateHistorialMedicoDto, UpdateHistorialMedicoDto, HistorialMedicoResponseDto } from '../dtos';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class HistorialMedicoService {
@@ -13,21 +14,24 @@ export class HistorialMedicoService {
     return historiales.map((hist) => this.mapToResponse(hist));
   }
 
-  async findById(codHist: number): Promise<HistorialMedicoResponseDto> {
-    const historial = await this.historialRepository.findById(codHist);
+  async findById(codHist: number, idSede?: number): Promise<HistorialMedicoResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const historial = await this.historialRepository.findById(codHist, sede);
     if (!historial) {
       throw new NotFoundException(`Historial con ID ${codHist} no encontrado`);
     }
     return this.mapToResponse(historial);
   }
 
-  async findByPaciente(codPac: number): Promise<HistorialMedicoResponseDto[]> {
-    const historiales = await this.historialRepository.findByPaciente(codPac);
+  async findByPaciente(codPac: number, idSede?: number): Promise<HistorialMedicoResponseDto[]> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const historiales = await this.historialRepository.findByPaciente(codPac, sede);
     return historiales.map((hist) => this.mapToResponse(hist));
   }
 
-  async findByEmpleado(idEmp: number): Promise<HistorialMedicoResponseDto[]> {
-    const historiales = await this.historialRepository.findByEmpleado(idEmp);
+  async findByEmpleado(idEmp: number, idSede?: number): Promise<HistorialMedicoResponseDto[]> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const historiales = await this.historialRepository.findByEmpleado(idEmp, sede);
     return historiales.map((hist) => this.mapToResponse(hist));
   }
 
@@ -54,25 +58,27 @@ export class HistorialMedicoService {
     return this.mapToResponse(historial);
   }
 
-  async update(codHist: number, dto: UpdateHistorialMedicoDto): Promise<HistorialMedicoResponseDto> {
-    const existing = await this.historialRepository.findById(codHist);
+  async update(codHist: number, dto: UpdateHistorialMedicoDto, idSede?: number): Promise<HistorialMedicoResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.historialRepository.findById(codHist, sede);
     if (!existing) {
-      throw new NotFoundException(`Historial con ID ${codHist} no encontrado`);
+      throw new NotFoundException(`Historial con código ${codHist} no encontrado`);
     }
 
-    const updated = await this.historialRepository.update(codHist, {
+    const updated = await this.historialRepository.update(codHist, sede, {
       ...dto,
       fecha: dto.fecha ? new Date(dto.fecha) : undefined,
     });
     return this.mapToResponse(updated);
   }
 
-  async delete(codHist: number): Promise<void> {
-    const existing = await this.historialRepository.findById(codHist);
+  async delete(codHist: number, idSede?: number): Promise<void> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.historialRepository.findById(codHist, sede);
     if (!existing) {
-      throw new NotFoundException(`Historial con ID ${codHist} no encontrado`);
+      throw new NotFoundException(`Historial con código ${codHist} no encontrado`);
     }
-    await this.historialRepository.delete(codHist);
+    await this.historialRepository.delete(codHist, sede);
   }
 
   async count(): Promise<number> {

@@ -1,6 +1,7 @@
 export interface Prescribe {
   codMed: number;
   idCita: number;
+  idSede: number;
   dosis: number;
   frecuencia: number;
   duracion: string;
@@ -26,6 +27,7 @@ export interface Prescribe {
 export interface CreatePrescribeDto {
   codMed: number;
   idCita: number;
+  idSede: number;
   dosis: number;
   frecuencia: number;
   duracion: string;

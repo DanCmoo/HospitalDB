@@ -14,6 +14,7 @@ import {
 } from '../dtos';
 import { EmpleadoEntity } from '../entities/empleado.entity';
 import { PaginationResponseDto } from '../../../common/utils/pagination.interface';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class EmpleadoService {
@@ -84,9 +85,10 @@ export class EmpleadoService {
     };
   }
 
-  async findById(idEmp: number): Promise<EmpleadoResponseDto> {
+  async findById(idEmp: number, idSede?: number): Promise<EmpleadoResponseDto> {
     this.logger.log(`Fetching empleado by id: ${idEmp}`);
-    const entity = await this.empleadoRepository.findById(idEmp);
+    const sede = idSede || SedeConfig.getIdSede();
+    const entity = await this.empleadoRepository.findById(idEmp, sede);
 
     if (!entity) {
       throw new NotFoundException(`Empleado con id ${idEmp} no encontrado`);
@@ -110,28 +112,31 @@ export class EmpleadoService {
   async update(
     idEmp: number,
     updateEmpleadoDto: UpdateEmpleadoDto,
+    idSede?: number,
   ): Promise<EmpleadoResponseDto> {
     this.logger.log(`Updating empleado with id: ${idEmp}`);
 
-    const existing = await this.empleadoRepository.findById(idEmp);
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.empleadoRepository.findById(idEmp, sede);
     if (!existing) {
       throw new NotFoundException(`Empleado con id ${idEmp} no encontrado`);
     }
 
-    const updated = await this.empleadoRepository.update(idEmp, updateEmpleadoDto);
+    const updated = await this.empleadoRepository.update(idEmp, sede, updateEmpleadoDto);
     this.logger.debug(`Empleado updated successfully: ${idEmp}`);
     return this.mapEntityToDto(updated);
   }
 
-  async delete(idEmp: number): Promise<void> {
+  async delete(idEmp: number, idSede?: number): Promise<void> {
     this.logger.log(`Deleting empleado with id: ${idEmp}`);
 
-    const existing = await this.empleadoRepository.findById(idEmp);
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.empleadoRepository.findById(idEmp, sede);
     if (!existing) {
       throw new NotFoundException(`Empleado con id ${idEmp} no encontrado`);
     }
 
-    const deleted = await this.empleadoRepository.delete(idEmp);
+    const deleted = await this.empleadoRepository.delete(idEmp, sede);
     if (!deleted) {
       throw new BadRequestException('No se pudo eliminar el empleado');
     }

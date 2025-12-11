@@ -4,12 +4,14 @@ import { UsuarioRepository } from '../repositories/usuario.repository';
 import { CreateUsuarioDto, UpdateUsuarioDto, UsuarioResponseDto, LoginDto } from '../dtos';
 import { UsuarioEntity } from '../entities/usuario.entity';
 import { ActivityLogService } from './activity-log.service';
+import { PersonaRepository } from '../../personas/repositories/persona.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usuarioRepository: UsuarioRepository,
     private readonly activityLogService: ActivityLogService,
+    private readonly personaRepository: PersonaRepository,
   ) {}
 
   async register(createDto: CreateUsuarioDto): Promise<UsuarioResponseDto> {
@@ -42,33 +44,26 @@ export class AuthService {
     return this.mapToResponse(created!);
   }
 
-  async login(loginDto: LoginDto, ipAddress?: string): Promise<UsuarioResponseDto> {
-    // Buscar usuario
-    const usuario = await this.usuarioRepository.findByUsername(loginDto.username);
-    if (!usuario) {
+  async login(loginDto: LoginDto, ipAddress?: string): Promise<any> {
+    // Buscar persona por correo
+    const persona = await this.personaRepository.findByEmail(loginDto.username);
+    if (!persona) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // Verificar si está activo
-    if (!usuario.activo) {
-      throw new UnauthorizedException('Usuario desactivado');
-    }
-
-    // Verificar contraseña
-    const isPasswordValid = await bcrypt.compare(loginDto.password, usuario.passwordHash);
-    if (!isPasswordValid) {
+    // Verificar contraseña (sin hash)
+    if (persona.contrasena !== loginDto.password) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    // Registrar login exitoso
-    await this.activityLogService.logActivity(
-      usuario.idUsuario,
-      'login',
-      'Inicio de sesión exitoso',
-      ipAddress,
-    );
-
-    return this.mapToResponse(usuario);
+    // Retornar datos de la persona
+    return {
+      numDoc: persona.numDoc,
+      nomPers: persona.nomPers,
+      correo: persona.correo,
+      rol: 'usuario', // Rol por defecto
+      idSede: persona.idSedeRegistro,
+    };
   }
 
   async validateUser(username: string): Promise<UsuarioResponseDto | null> {

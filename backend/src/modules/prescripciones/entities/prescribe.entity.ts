@@ -10,6 +10,9 @@ export class PrescribeEntity {
   @PrimaryColumn({ name: 'id_cita', type: 'int' })
   idCita: number;
 
+  @PrimaryColumn({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @Column({ name: 'dosis', type: 'int' })
   dosis: number;
 
@@ -27,6 +30,6 @@ export class PrescribeEntity {
   medicamento: MedicamentoEntity;
 
   @ManyToOne(() => AgendaCitaEntity, (cita) => cita.prescripciones)
-  @JoinColumn({ name: 'id_cita' })
+  @JoinColumn([{ name: 'id_cita', referencedColumnName: 'idCita' }, { name: 'id_sede', referencedColumnName: 'idSede' }])
   cita: AgendaCitaEntity;
 }

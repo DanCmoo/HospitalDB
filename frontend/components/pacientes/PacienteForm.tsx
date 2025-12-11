@@ -14,10 +14,12 @@ interface PacienteFormProps {
 export default function PacienteForm({ paciente, onSuccess, onCancel }: PacienteFormProps) {
   const [formData, setFormData] = useState({
     codPac: 0,
+    idSede: 1,
     numDoc: '',
     drPac: '',
     fechaNac: '',
     genero: '',
+    estadoPaciente: 'Activo',
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,10 +30,12 @@ export default function PacienteForm({ paciente, onSuccess, onCancel }: Paciente
     if (paciente) {
       setFormData({
         codPac: paciente.codPac,
+        idSede: paciente.idSede || 1,
         numDoc: paciente.numDoc,
         drPac: paciente.drPac || '',
         fechaNac: paciente.fechaNac,
         genero: paciente.genero,
+        estadoPaciente: paciente.estadoPaciente || 'Activo',
       });
       setPersonaExists(true);
       if (paciente.persona) {
@@ -92,10 +96,12 @@ export default function PacienteForm({ paciente, onSuccess, onCancel }: Paciente
       } else {
         const createData: CreatePacienteDto = {
           codPac: formData.codPac,
+          idSede: formData.idSede,
           numDoc: formData.numDoc,
           drPac: formData.drPac || undefined,
           fechaNac: formData.fechaNac,
           genero: formData.genero,
+          estadoPaciente: formData.estadoPaciente,
         };
         await pacientesApi.create(createData);
       }
@@ -117,6 +123,19 @@ export default function PacienteForm({ paciente, onSuccess, onCancel }: Paciente
           onChange={(e) => setFormData({ ...formData, codPac: parseInt(e.target.value) })}
           disabled={!!paciente}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">ID Sede *</label>
+        <input
+          type="number"
+          value={formData.idSede}
+          onChange={(e) => setFormData({ ...formData, idSede: parseInt(e.target.value) })}
+          disabled={!!paciente}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          min={1}
           required
         />
       </div>
@@ -178,6 +197,18 @@ export default function PacienteForm({ paciente, onSuccess, onCancel }: Paciente
           <option value="Masculino">Masculino</option>
           <option value="Femenino">Femenino</option>
           <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700">Estado del Paciente</label>
+        <select
+          value={formData.estadoPaciente}
+          onChange={(e) => setFormData({ ...formData, estadoPaciente: e.target.value })}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+        >
+          <option value="Activo">Activo</option>
+          <option value="Inactivo">Inactivo</option>
         </select>
       </div>
 

@@ -17,6 +17,7 @@ export default function MedicamentoForm({ medicamento, onSuccess, onCancel }: Me
     stock: 0,
     proveedor: '',
     descripcion: '',
+    idSede: 1,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +30,7 @@ export default function MedicamentoForm({ medicamento, onSuccess, onCancel }: Me
         stock: medicamento.stock,
         proveedor: medicamento.proveedor || '',
         descripcion: medicamento.descripcion || '',
+        idSede: medicamento.idSede || 1,
       });
     } else {
       loadNextCodigo();
@@ -65,6 +67,7 @@ export default function MedicamentoForm({ medicamento, onSuccess, onCancel }: Me
           stock: formData.stock,
           proveedor: formData.proveedor || undefined,
           descripcion: formData.descripcion || undefined,
+          idSede: formData.idSede,
         };
         await medicamentosApi.create(createData);
       }

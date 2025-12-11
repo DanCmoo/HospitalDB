@@ -15,9 +15,12 @@ export class EquipamientoService {
   ) {}
 
   async create(createEquipamientoDto: CreateEquipamientoDto): Promise<EquipamientoResponseDto> {
+    const idSede = SedeConfig.getIdSede();
+    
     // Verificar que el código no exista
     const existingByCodigo = await this.equipamientoRepository.findByCodigo(
       createEquipamientoDto.codEq,
+      idSede,
     );
     if (existingByCodigo) {
       throw new ConflictException(
@@ -26,7 +29,7 @@ export class EquipamientoService {
     }
 
     // Verificar que el empleado exista
-    const empleado = await this.empleadoRepository.findById(createEquipamientoDto.idEmp);
+    const empleado = await this.empleadoRepository.findById(createEquipamientoDto.idEmp, idSede);
     if (!empleado) {
       throw new NotFoundException(
         `Empleado con ID ${createEquipamientoDto.idEmp} no encontrado`,
@@ -36,7 +39,7 @@ export class EquipamientoService {
     // Verificar departamentos si se proporcionan
     if (createEquipamientoDto.departamentos && createEquipamientoDto.departamentos.length > 0) {
       for (const nomDept of createEquipamientoDto.departamentos) {
-        const dept = await this.departamentoRepository.findByNombre(nomDept);
+        const dept = await this.departamentoRepository.findByNombre(nomDept, idSede);
         if (!dept) {
           throw new NotFoundException(`Departamento ${nomDept} no encontrado`);
         }
@@ -44,9 +47,6 @@ export class EquipamientoService {
     }
 
     const { departamentos, ...equipamientoData } = createEquipamientoDto;
-
-    // Auto-asignar id_sede
-    const idSede = SedeConfig.getIdSede();
 
     const equipamientoToCreate: any = {
       ...equipamientoData,
@@ -66,7 +66,7 @@ export class EquipamientoService {
       }
     }
 
-    const created = await this.equipamientoRepository.findByCodigo(entity.codEq);
+    const created = await this.equipamientoRepository.findByCodigo(entity.codEq, idSede);
     return this.mapEntityToDto(created);
   }
 
@@ -75,8 +75,9 @@ export class EquipamientoService {
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
-  async findByCodigo(codEq: number): Promise<EquipamientoResponseDto> {
-    const entity = await this.equipamientoRepository.findByCodigo(codEq);
+  async findByCodigo(codEq: number, idSede?: number): Promise<EquipamientoResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const entity = await this.equipamientoRepository.findByCodigo(codEq, sede);
     if (!entity) {
       throw new NotFoundException(`Equipamiento con código ${codEq} no encontrado`);
     }
@@ -88,8 +89,9 @@ export class EquipamientoService {
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
-  async findByEmpleado(idEmp: number): Promise<EquipamientoResponseDto[]> {
-    const entities = await this.equipamientoRepository.findByEmpleado(idEmp);
+  async findByEmpleado(idEmp: number, idSede?: number): Promise<EquipamientoResponseDto[]> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const entities = await this.equipamientoRepository.findByEmpleado(idEmp, sede);
     return entities.map((entity) => this.mapEntityToDto(entity));
   }
 
@@ -106,8 +108,10 @@ export class EquipamientoService {
   async update(
     codEq: number,
     updateEquipamientoDto: UpdateEquipamientoDto,
+    idSede?: number,
   ): Promise<EquipamientoResponseDto> {
-    const existing = await this.equipamientoRepository.findByCodigo(codEq);
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.equipamientoRepository.findByCodigo(codEq, sede);
     if (!existing) {
       throw new NotFoundException(`Equipamiento con código ${codEq} no encontrado`);
     }
@@ -119,7 +123,7 @@ export class EquipamientoService {
       dataToUpdate.fechaMant = new Date(updateEquipamientoDto.fechaMant);
     }
 
-    await this.equipamientoRepository.update(codEq, dataToUpdate);
+    await this.equipamientoRepository.update(codEq, sede, dataToUpdate);
 
     // Actualizar departamentos si se proporcionan
     if (departamentos !== undefined) {
@@ -133,7 +137,7 @@ export class EquipamientoService {
       // Asignar nuevos departamentos
       if (departamentos.length > 0) {
         for (const nomDept of departamentos) {
-          const dept = await this.departamentoRepository.findByNombre(nomDept);
+          const dept = await this.departamentoRepository.findByNombre(nomDept, sede);
           if (!dept) {
             throw new NotFoundException(`Departamento ${nomDept} no encontrado`);
           }
@@ -142,17 +146,18 @@ export class EquipamientoService {
       }
     }
 
-    const updated = await this.equipamientoRepository.findByCodigo(codEq);
+    const updated = await this.equipamientoRepository.findByCodigo(codEq, sede);
     return this.mapEntityToDto(updated);
   }
 
-  async delete(codEq: number): Promise<void> {
-    const existing = await this.equipamientoRepository.findByCodigo(codEq);
+  async delete(codEq: number, idSede?: number): Promise<void> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.equipamientoRepository.findByCodigo(codEq, sede);
     if (!existing) {
       throw new NotFoundException(`Equipamiento con código ${codEq} no encontrado`);
     }
 
-    await this.equipamientoRepository.delete(codEq);
+    await this.equipamientoRepository.delete(codEq, sede);
   }
 
   async count(): Promise<number> {

@@ -17,9 +17,9 @@ export class AgendaCitaRepository {
     });
   }
 
-  async findById(idCita: number): Promise<AgendaCitaEntity | null> {
+  async findById(idCita: number, idSede: number): Promise<AgendaCitaEntity | null> {
     return this.repository.findOne({
-      where: { idCita },
+      where: { idCita, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona', 'prescripciones', 'prescripciones.medicamento'],
     });
   }
@@ -32,17 +32,17 @@ export class AgendaCitaRepository {
     });
   }
 
-  async findByEmpleado(idEmp: number): Promise<AgendaCitaEntity[]> {
+  async findByEmpleado(idEmp: number, idSede: number): Promise<AgendaCitaEntity[]> {
     return this.repository.find({
-      where: { idEmp },
+      where: { idEmp, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona'],
       order: { fecha: 'DESC', hora: 'DESC' },
     });
   }
 
-  async findByPaciente(codPac: number): Promise<AgendaCitaEntity[]> {
+  async findByPaciente(codPac: number, idSede: number): Promise<AgendaCitaEntity[]> {
     return this.repository.find({
-      where: { codPac },
+      where: { codPac, idSede },
       relations: ['empleado', 'empleado.persona', 'paciente', 'paciente.persona'],
       order: { fecha: 'DESC', hora: 'DESC' },
     });
@@ -87,13 +87,13 @@ export class AgendaCitaRepository {
     return this.repository.save(entity);
   }
 
-  async update(idCita: number, data: Partial<AgendaCitaEntity>): Promise<AgendaCitaEntity> {
-    await this.repository.update(idCita, data);
-    return this.findById(idCita);
+  async update(idCita: number, idSede: number, data: Partial<AgendaCitaEntity>): Promise<AgendaCitaEntity> {
+    await this.repository.update({ idCita, idSede }, data);
+    return this.findById(idCita, idSede);
   }
 
-  async delete(idCita: number): Promise<void> {
-    await this.repository.delete(idCita);
+  async delete(idCita: number, idSede: number): Promise<void> {
+    await this.repository.delete({ idCita, idSede });
   }
 
   async count(): Promise<number> {

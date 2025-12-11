@@ -51,7 +51,7 @@ export class PersonaService {
     
     const entity = await this.personaRepository.create({
       ...createPersonaDto,
-      idSede,
+      idSedeRegistro: idSede,
     });
     this.logger.debug(`Persona created successfully: ${entity.numDoc} in sede ${idSede}`);
     return this.mapEntityToDto(entity);

@@ -16,11 +16,13 @@ export default function EmpleadoForm({ empleado, onSubmit, onCancel, isLoading }
   const isEditing = !!empleado;
   
   const [formData, setFormData] = useState({
+    idEmp: empleado?.idEmp || 0,
     numDoc: empleado?.numDoc || '',
     hashContrato: empleado?.hashContrato || '',
     idSede: empleado?.idSede?.toString() || '1',
     nomDept: empleado?.nomDept || '',
     cargo: empleado?.cargo || '',
+    activo: empleado?.activo !== undefined ? empleado.activo : true,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -56,14 +58,14 @@ export default function EmpleadoForm({ empleado, onSubmit, onCancel, isLoading }
 
     if (!formData.nomDept.trim()) {
       newErrors.nomDept = 'El departamento es requerido';
-    } else if (formData.nomDept.length > 50) {
-      newErrors.nomDept = 'El departamento no puede exceder 50 caracteres';
+    } else if (formData.nomDept.length > 30) {
+      newErrors.nomDept = 'El departamento no puede exceder 30 caracteres';
     }
 
     if (!formData.cargo.trim()) {
       newErrors.cargo = 'El cargo es requerido';
-    } else if (formData.cargo.length > 50) {
-      newErrors.cargo = 'El cargo no puede exceder 50 caracteres';
+    } else if (formData.cargo.length > 30) {
+      newErrors.cargo = 'El cargo no puede exceder 30 caracteres';
     }
 
     setErrors(newErrors);
@@ -78,16 +80,18 @@ export default function EmpleadoForm({ empleado, onSubmit, onCancel, isLoading }
     const submitData = isEditing
       ? {
           hashContrato: formData.hashContrato || undefined,
-          idSede: parseInt(formData.idSede),
           nomDept: formData.nomDept,
           cargo: formData.cargo,
+          activo: formData.activo,
         }
       : {
+          idEmp: formData.idEmp,
+          idSede: parseInt(formData.idSede),
           numDoc: formData.numDoc,
           hashContrato: formData.hashContrato || undefined,
-          idSede: parseInt(formData.idSede),
           nomDept: formData.nomDept,
           cargo: formData.cargo,
+          activo: formData.activo,
         };
 
     await onSubmit(submitData);
@@ -219,6 +223,42 @@ export default function EmpleadoForm({ empleado, onSubmit, onCancel, isLoading }
             placeholder="Ej: Médico General, Enfermera, Recepcionista"
           />
           {errors.cargo && <p className="mt-1 text-sm text-red-600">{errors.cargo}</p>}
+        </div>
+
+        {/* ID Empleado - Solo en creación */}
+        {!isEditing && (
+          <div>
+            <label htmlFor="idEmp" className="block text-sm font-medium text-gray-700 mb-2">
+              ID Empleado *
+            </label>
+            <input
+              type="number"
+              id="idEmp"
+              name="idEmp"
+              value={formData.idEmp}
+              onChange={handleChange}
+              disabled={isLoading}
+              min="1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="ID del empleado"
+            />
+          </div>
+        )}
+
+        {/* Estado Activo */}
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="activo"
+            name="activo"
+            checked={formData.activo}
+            onChange={(e) => setFormData(prev => ({ ...prev, activo: e.target.checked }))}
+            disabled={isLoading}
+            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          />
+          <label htmlFor="activo" className="ml-2 block text-sm text-gray-700">
+            Empleado Activo
+          </label>
         </div>
       </div>
 

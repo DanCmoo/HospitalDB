@@ -27,6 +27,7 @@ export default function PersonaForm({ persona, onSubmit, onCancel, isLoading }: 
     nomPers: persona?.nomPers || '',
     correo: persona?.correo || '',
     telPers: persona?.telPers || '',
+    idSedeRegistro: persona?.idSedeRegistro || 1,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -46,12 +47,14 @@ export default function PersonaForm({ persona, onSubmit, onCancel, isLoading }: 
 
     if (!formData.nomPers.trim()) {
       newErrors.nomPers = 'El nombre es requerido';
-    } else if (formData.nomPers.length > 50) {
-      newErrors.nomPers = 'El nombre no puede exceder 50 caracteres';
+    } else if (formData.nomPers.length < 3 || formData.nomPers.length > 50) {
+      newErrors.nomPers = 'El nombre debe tener entre 3 y 50 caracteres';
     }
 
     if (formData.correo && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.correo)) {
       newErrors.correo = 'El correo electrónico no es válido';
+    } else if (formData.correo && formData.correo.length > 60) {
+      newErrors.correo = 'El correo no puede exceder 60 caracteres';
     }
 
     if (formData.telPers && (formData.telPers.length < 7 || formData.telPers.length > 20)) {
@@ -84,6 +87,7 @@ export default function PersonaForm({ persona, onSubmit, onCancel, isLoading }: 
           nomPers: formData.nomPers,
           correo: formData.correo || undefined,
           telPers: formData.telPers || undefined,
+          idSedeRegistro: formData.idSedeRegistro,
         };
 
     await onSubmit(submitData);
@@ -204,6 +208,29 @@ export default function PersonaForm({ persona, onSubmit, onCancel, isLoading }: 
           />
           {errors.telPers && <p className="mt-1 text-sm text-red-600">{errors.telPers}</p>}
         </div>
+
+        {/* Sede de Registro */}
+        {!isEditing && (
+          <div>
+            <label htmlFor="idSedeRegistro" className="block text-sm font-medium text-gray-700 mb-2">
+              Sede de Registro *
+            </label>
+            <input
+              type="number"
+              id="idSedeRegistro"
+              name="idSedeRegistro"
+              value={formData.idSedeRegistro}
+              onChange={handleChange}
+              disabled={isLoading}
+              min="1"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="ID de la sede"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Sede hospitalaria donde se registra la persona
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Botones */}

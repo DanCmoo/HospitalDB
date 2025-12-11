@@ -92,21 +92,21 @@ function ReportesContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-900 p-8">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6 mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">
             📊 Sistema de Reportes
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-300">
             Genera reportes en PDF con información detallada del hospital
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6">
           {/* Selector de tipo de reporte */}
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Tipo de Reporte
             </label>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -117,14 +117,14 @@ function ReportesContent() {
                 }}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   tipoReporte === 'general'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 hover:border-blue-400'
+                    ? 'border-blue-600 bg-blue-900/30 text-blue-400'
+                    : 'border-gray-600 hover:border-blue-400 text-gray-300'
                 }`}
               >
                 <div className="text-center">
                   <div className="text-2xl mb-2">📈</div>
                   <div className="font-semibold">Reporte General</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-gray-400 mt-1">
                     Estadísticas globales del hospital
                   </div>
                 </div>
@@ -137,14 +137,14 @@ function ReportesContent() {
                 }}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   tipoReporte === 'paciente'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 hover:border-blue-400'
+                    ? 'border-blue-600 bg-blue-900/30 text-blue-400'
+                    : 'border-gray-600 hover:border-blue-400 text-gray-300'
                 }`}
               >
                 <div className="text-center">
                   <div className="text-2xl mb-2">🏥</div>
                   <div className="font-semibold">Reporte de Paciente</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-gray-400 mt-1">
                     Historial médico completo
                   </div>
                 </div>
@@ -157,14 +157,14 @@ function ReportesContent() {
                 }}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   tipoReporte === 'sede'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 hover:border-blue-400'
+                    ? 'border-blue-600 bg-blue-900/30 text-blue-400'
+                    : 'border-gray-600 hover:border-blue-400 text-gray-300'
                 }`}
               >
                 <div className="text-center">
                   <div className="text-2xl mb-2">🏢</div>
                   <div className="font-semibold">Reporte de Sede</div>
-                  <div className="text-xs text-gray-600 mt-1">
+                  <div className="text-xs text-gray-400 mt-1">
                     Información de sede hospitalaria
                   </div>
                 </div>
@@ -176,7 +176,7 @@ function ReportesContent() {
           <div className="mb-6">
             {tipoReporte === 'paciente' && (
               <div className="mb-4">
-                <label htmlFor="codPac" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="codPac" className="block text-sm font-medium text-gray-300 mb-2">
                   Código del Paciente *
                 </label>
                 <input
@@ -184,7 +184,7 @@ function ReportesContent() {
                   type="number"
                   value={codPac}
                   onChange={(e) => setCodPac(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Ingrese el código del paciente"
                   required
                 />
@@ -193,7 +193,7 @@ function ReportesContent() {
 
             {tipoReporte === 'sede' && (
               <div className="mb-4">
-                <label htmlFor="idSede" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="idSede" className="block text-sm font-medium text-gray-300 mb-2">
                   ID de la Sede *
                 </label>
                 <input
@@ -201,7 +201,7 @@ function ReportesContent() {
                   type="number"
                   value={idSede}
                   onChange={(e) => setIdSede(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   placeholder="Ingrese el ID de la sede"
                   required
                 />
@@ -211,7 +211,7 @@ function ReportesContent() {
             {/* Filtros de fecha (opcionales para todos los tipos) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="fechaInicio" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="fechaInicio" className="block text-sm font-medium text-gray-300 mb-2">
                   Fecha Inicio (Opcional)
                 </label>
                 <input
@@ -219,12 +219,12 @@ function ReportesContent() {
                   type="date"
                   value={fechaInicio}
                   onChange={(e) => setFechaInicio(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label htmlFor="fechaFin" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="fechaFin" className="block text-sm font-medium text-gray-300 mb-2">
                   Fecha Fin (Opcional)
                 </label>
                 <input
@@ -232,7 +232,7 @@ function ReportesContent() {
                   type="date"
                   value={fechaFin}
                   onChange={(e) => setFechaFin(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
@@ -293,16 +293,16 @@ function ReportesContent() {
 
             <button
               onClick={limpiarFormulario}
-              className="px-6 py-3 border border-gray-300 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              className="px-6 py-3 border border-gray-600 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-gray-300">
             >
               Limpiar
             </button>
           </div>
 
           {/* Información adicional */}
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-900 mb-2">ℹ️ Información</h3>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="mt-6 p-4 bg-blue-900/30 border border-blue-700 rounded-lg">
+            <h3 className="font-semibold text-blue-400 mb-2">ℹ️ Información</h3>
+            <ul className="text-sm text-blue-300 space-y-1">
               <li>• Los reportes se generan en formato PDF</li>
               <li>• Las fechas son opcionales (sin filtro muestra todo)</li>
               <li>• El reporte se descargará automáticamente al generarse</li>

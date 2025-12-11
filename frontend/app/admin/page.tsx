@@ -207,8 +207,8 @@ export default function AdminUsuariosPage() {
 
   if (user?.rol !== 'administrador') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black p-8">
+        <div className="max-w-4xl mx-auto bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6">
           <h1 className="text-2xl font-bold text-red-600">Acceso Denegado</h1>
           <p>No tiene permisos para acceder a esta página.</p>
         </div>
@@ -218,37 +218,37 @@ export default function AdminUsuariosPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8 flex items-center justify-center">
-        <div className="text-xl">Cargando...</div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black p-8 flex items-center justify-center">
+        <div className="text-xl text-white">Cargando...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Gestión de Usuarios</h1>
+        <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6 mb-6">
+          <h1 className="text-3xl font-bold text-white mb-6">Gestión de Usuarios</h1>
 
           {/* Filtros */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Buscar</label>
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Usuario, nombre o documento..."
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Filtrar por Rol</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Filtrar por Rol</label>
               <select
                 value={filterRol}
                 onChange={(e) => setFilterRol(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="todos">Todos</option>
                 <option value="administrador">Administrador</option>
@@ -259,11 +259,11 @@ export default function AdminUsuariosPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Filtrar por Estado</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Filtrar por Estado</label>
               <select
                 value={filterActivo}
                 onChange={(e) => setFilterActivo(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="todos">Todos</option>
                 <option value="activos">Activos</option>
@@ -274,60 +274,60 @@ export default function AdminUsuariosPage() {
 
           {/* Estadísticas */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600">{usuarios.length}</div>
-              <div className="text-sm text-gray-600">Total Usuarios</div>
+            <div className="bg-blue-900/30 p-4 rounded-lg border border-gray-700">
+              <div className="text-2xl font-bold text-blue-400">{usuarios.length}</div>
+              <div className="text-sm text-gray-300">Total Usuarios</div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-green-600">
+            <div className="bg-green-900/30 p-4 rounded-lg border border-gray-700">
+              <div className="text-2xl font-bold text-green-400">
                 {usuarios.filter(u => u.activo).length}
               </div>
-              <div className="text-sm text-gray-600">Activos</div>
+              <div className="text-sm text-gray-300">Activos</div>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600">
+            <div className="bg-yellow-900/30 p-4 rounded-lg border border-gray-700">
+              <div className="text-2xl font-bold text-yellow-400">
                 {usuarios.filter(u => !u.activo).length}
               </div>
-              <div className="text-sm text-gray-600">Inactivos</div>
+              <div className="text-sm text-gray-300">Inactivos</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">{filteredUsuarios.length}</div>
-              <div className="text-sm text-gray-600">Filtrados</div>
+            <div className="bg-purple-900/30 p-4 rounded-lg border border-gray-700">
+              <div className="text-2xl font-bold text-purple-400">{filteredUsuarios.length}</div>
+              <div className="text-sm text-gray-300">Filtrados</div>
             </div>
           </div>
 
           {/* Tabla de usuarios */}
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-700">
+              <thead className="bg-gray-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Usuario
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Nombre
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Rol
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Estado
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-gray-900 divide-y divide-gray-700">
                 {filteredUsuarios.map((usuario) => (
-                  <tr key={usuario.idUsuario} className="hover:bg-gray-50">
+                  <tr key={usuario.idUsuario} className="hover:bg-gray-700">
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{usuario.username}</div>
-                      <div className="text-sm text-gray-500">{usuario.numDoc}</div>
+                      <div className="text-sm font-medium text-white">{usuario.username}</div>
+                      <div className="text-sm text-gray-300">{usuario.numDoc}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{usuario.persona?.nomPers || 'N/A'}</div>
-                      <div className="text-sm text-gray-500">{usuario.persona?.correo || ''}</div>
+                      <div className="text-sm text-white">{usuario.persona?.nomPers || 'N/A'}</div>
+                      <div className="text-sm text-gray-300">{usuario.persona?.correo || ''}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -382,22 +382,22 @@ export default function AdminUsuariosPage() {
         </div>
 
         {/* Logs Recientes */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Actividad Reciente</h2>
+        <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6">
+          <h2 className="text-2xl font-bold text-white mb-4">Actividad Reciente</h2>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {activityLogs.map((log) => (
-              <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50">
+              <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">>
                 <div className="flex justify-between">
                   <div>
-                    <span className="font-semibold">{log.usuario?.username || 'Usuario'}</span>
-                    <span className="text-gray-600"> - {log.accion}</span>
+                    <span className="font-semibold text-white">{log.usuario?.username || 'Usuario'}</span>
+                    <span className="text-gray-300"> - {log.accion}</span>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-300">
                     {new Date(log.fechaAccion).toLocaleString('es-ES')}
                   </span>
                 </div>
                 {log.detalles && (
-                  <div className="text-sm text-gray-600 mt-1">{log.detalles}</div>
+                  <div className="text-sm text-gray-300 mt-1">{log.detalles}</div>
                 )}
               </div>
             ))}
@@ -408,15 +408,15 @@ export default function AdminUsuariosPage() {
       {/* Modal de Edición */}
       {showEditModal && selectedUsuario && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Editar Usuario: {selectedUsuario.username}</h2>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">Editar Usuario: {selectedUsuario.username}</h2>
             
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Rol</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Rol</label>
               <select
                 value={editRol}
                 onChange={(e) => setEditRol(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="administrador">Administrador</option>
                 <option value="medico">Médico</option>
@@ -433,7 +433,7 @@ export default function AdminUsuariosPage() {
                   onChange={(e) => setEditActivo(e.target.checked)}
                   className="mr-2"
                 />
-                <span className="text-sm font-medium text-gray-700">Usuario Activo</span>
+                <span className="text-sm font-medium text-gray-300">Usuario Activo</span>
               </label>
             </div>
 
@@ -458,16 +458,16 @@ export default function AdminUsuariosPage() {
       {/* Modal de Reset Password */}
       {showResetPasswordModal && selectedUsuario && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Restablecer Contraseña: {selectedUsuario.username}</h2>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">Restablecer Contraseña: {selectedUsuario.username}</h2>
             
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Nueva Contraseña</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Nueva Contraseña</label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Mínimo 6 caracteres"
               />
             </div>
@@ -493,20 +493,20 @@ export default function AdminUsuariosPage() {
       {/* Modal de Logs */}
       {showLogsModal && selectedUsuario && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">Historial de Actividad: {selectedUsuario.username}</h2>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">Historial de Actividad: {selectedUsuario.username}</h2>
             
             <div className="space-y-2">
               {activityLogs.map((log) => (
-                <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-50">
+                <div key={log.idLog} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-900">>
                   <div className="flex justify-between">
-                    <span className="font-semibold">{log.accion}</span>
-                    <span className="text-sm text-gray-500">
+                    <span className="font-semibold text-white">{log.accion}</span>
+                    <span className="text-sm text-gray-300">
                       {new Date(log.fechaAccion).toLocaleString('es-ES')}
                     </span>
                   </div>
                   {log.detalles && (
-                    <div className="text-sm text-gray-600 mt-1">{log.detalles}</div>
+                    <div className="text-sm text-gray-300 mt-1">{log.detalles}</div>
                   )}
                 </div>
               ))}

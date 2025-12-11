@@ -17,9 +17,9 @@ export class PacienteRepository {
     });
   }
 
-  async findByCodigo(codPac: number): Promise<PacienteEntity | null> {
+  async findByCodigo(codPac: number, idSede: number): Promise<PacienteEntity | null> {
     return this.repository.findOne({
-      where: { codPac },
+      where: { codPac, idSede },
       relations: ['persona'],
     });
   }
@@ -34,6 +34,14 @@ export class PacienteRepository {
   async findByGenero(genero: string): Promise<PacienteEntity[]> {
     return this.repository.find({
       where: { genero },
+      relations: ['persona'],
+      order: { codPac: 'ASC' },
+    });
+  }
+
+  async findBySede(idSede: number): Promise<PacienteEntity[]> {
+    return this.repository.find({
+      where: { idSede },
       relations: ['persona'],
       order: { codPac: 'ASC' },
     });
@@ -58,13 +66,13 @@ export class PacienteRepository {
     return this.repository.save(entity);
   }
 
-  async update(codPac: number, data: Partial<PacienteEntity>): Promise<PacienteEntity | null> {
-    await this.repository.update(codPac, data);
-    return this.findByCodigo(codPac);
+  async update(codPac: number, idSede: number, data: Partial<PacienteEntity>): Promise<PacienteEntity | null> {
+    await this.repository.update({ codPac, idSede }, data);
+    return this.findByCodigo(codPac, idSede);
   }
 
-  async delete(codPac: number): Promise<boolean> {
-    const result = await this.repository.delete(codPac);
+  async delete(codPac: number, idSede: number): Promise<boolean> {
+    const result = await this.repository.delete({ codPac, idSede });
     return result.affected > 0;
   }
 

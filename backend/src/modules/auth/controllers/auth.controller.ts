@@ -45,16 +45,17 @@ export class AuthController {
     @Body() loginDto: LoginDto,
     @Session() session: Record<string, any>,
     @Req() req: Request,
-  ): Promise<UsuarioResponseDto> {
+  ): Promise<any> {
     const ipAddress = req.ip || req.socket.remoteAddress;
     const user = await this.authService.login(loginDto, ipAddress);
     
     // Guardar usuario en sesión
     session.user = {
-      idUsuario: user.idUsuario,
-      username: user.username,
-      rol: user.rol,
       numDoc: user.numDoc,
+      correo: user.correo,
+      nomPers: user.nomPers,
+      rol: user.rol,
+      idSede: user.idSede,
     };
 
     return user;
@@ -76,6 +77,7 @@ export class AuthController {
     return this.authService.findById(currentUser.idUsuario);
   }
 
+  @Public()
   @Get('session')
   async checkSession(@Session() session: Record<string, any>): Promise<{ authenticated: boolean; user?: any }> {
     return {

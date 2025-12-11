@@ -127,11 +127,11 @@ export default function SedesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-900 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Gestión de Sedes Hospitalarias</h1>
-          <p className="mt-2 text-sm text-gray-600">
+          <h1 className="text-3xl font-bold text-white">Gestión de Sedes Hospitalarias</h1>
+          <p className="mt-2 text-sm text-gray-300">
             Administra las sedes hospitalarias del sistema
           </p>
         </div>
@@ -143,8 +143,8 @@ export default function SedesPage() {
         )}
 
         {showForm ? (
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+          <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6 mb-8">
+            <h2 className="text-xl font-semibold text-white mb-6">
               {editingSede ? 'Editar Sede' : 'Nueva Sede'}
             </h2>
             <SedeForm
@@ -166,7 +166,7 @@ export default function SedesPage() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                       placeholder="Buscar por nombre o ciudad..."
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="flex-1 px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <button
                       onClick={handleSearch}
@@ -185,7 +185,7 @@ export default function SedesPage() {
                       onChange={(e) => setFilterCiudad(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleFilterByCiudad()}
                       placeholder="Filtrar por ciudad..."
-                      className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="flex-1 px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                     <button
                       onClick={handleFilterByCiudad}
@@ -201,7 +201,7 @@ export default function SedesPage() {
                 {(searchTerm || filterCiudad) && (
                   <button
                     onClick={clearFilters}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="px-4 py-2 border border-gray-600 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                   >
                     Limpiar Filtros
                   </button>
@@ -230,7 +230,7 @@ export default function SedesPage() {
         />
 
         {!isLoading && !showForm && (
-          <div className="mt-4 text-sm text-gray-600">
+          <div className="mt-4 text-sm text-gray-300">
             Total de sedes: <span className="font-semibold">{sedes.length}</span>
             {(searchTerm || filterCiudad) && (
               <span className="ml-4 text-blue-600">

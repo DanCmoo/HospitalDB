@@ -16,9 +16,9 @@ export class EquipamientoRepository {
     });
   }
 
-  async findByCodigo(codEq: number): Promise<EquipamientoEntity | null> {
+  async findByCodigo(codEq: number, idSede: number): Promise<EquipamientoEntity | null> {
     return this.repository.findOne({
-      where: { codEq },
+      where: { codEq, idSede },
       relations: ['empleado', 'empleado.persona', 'departamentos'],
     });
   }
@@ -30,9 +30,16 @@ export class EquipamientoRepository {
     });
   }
 
-  async findByEmpleado(idEmp: number): Promise<EquipamientoEntity[]> {
+  async findByEmpleado(idEmp: number, idSede: number): Promise<EquipamientoEntity[]> {
     return this.repository.find({
-      where: { idEmp },
+      where: { idEmp, idSede },
+      relations: ['empleado', 'empleado.persona', 'departamentos'],
+    });
+  }
+
+  async findBySede(idSede: number): Promise<EquipamientoEntity[]> {
+    return this.repository.find({
+      where: { idSede },
       relations: ['empleado', 'empleado.persona', 'departamentos'],
     });
   }
@@ -67,13 +74,13 @@ export class EquipamientoRepository {
     return this.repository.save(entity);
   }
 
-  async update(codEq: number, data: Partial<EquipamientoEntity>): Promise<EquipamientoEntity> {
-    await this.repository.update(codEq, data);
-    return this.findByCodigo(codEq);
+  async update(codEq: number, idSede: number, data: Partial<EquipamientoEntity>): Promise<EquipamientoEntity> {
+    await this.repository.update({ codEq, idSede }, data);
+    return this.findByCodigo(codEq, idSede);
   }
 
-  async delete(codEq: number): Promise<void> {
-    await this.repository.delete(codEq);
+  async delete(codEq: number, idSede: number): Promise<void> {
+    await this.repository.delete({ codEq, idSede });
   }
 
   async count(): Promise<number> {

@@ -10,9 +10,9 @@ export class EmpleadoRepository {
     private readonly repository: Repository<EmpleadoEntity>,
   ) {}
 
-  async findById(idEmp: number): Promise<EmpleadoEntity | null> {
+  async findById(idEmp: number, idSede: number): Promise<EmpleadoEntity | null> {
     return this.repository.findOne({
-      where: { idEmp },
+      where: { idEmp, idSede },
       relations: ['persona'],
     });
   }
@@ -58,6 +58,14 @@ export class EmpleadoRepository {
     });
   }
 
+  async findBySede(idSede: number): Promise<EmpleadoEntity[]> {
+    return this.repository.find({
+      where: { idSede },
+      relations: ['persona'],
+      order: { idEmp: 'ASC' },
+    });
+  }
+
   async create(data: Partial<EmpleadoEntity>): Promise<EmpleadoEntity> {
     const entity = this.repository.create(data);
     return this.repository.save(entity);
@@ -65,14 +73,15 @@ export class EmpleadoRepository {
 
   async update(
     idEmp: number,
+    idSede: number,
     data: Partial<EmpleadoEntity>,
   ): Promise<EmpleadoEntity | null> {
-    await this.repository.update({ idEmp }, data);
-    return this.findById(idEmp);
+    await this.repository.update({ idEmp, idSede }, data);
+    return this.findById(idEmp, idSede);
   }
 
-  async delete(idEmp: number): Promise<boolean> {
-    const result = await this.repository.delete({ idEmp });
+  async delete(idEmp: number, idSede: number): Promise<boolean> {
+    const result = await this.repository.delete({ idEmp, idSede });
     return result.affected > 0;
   }
 

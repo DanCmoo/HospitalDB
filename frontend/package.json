@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 4001",
     "dev:norte": "cross-env NEXT_PUBLIC_SEDE_NOMBRE=\"Sede Norte\" NEXT_PUBLIC_SEDE_ID=norte NEXT_PUBLIC_SEDE_COLOR=#3B82F6 NEXT_PUBLIC_API_URL=http://localhost:3001 next dev -p 4001",
     "dev:centro": "cross-env NEXT_PUBLIC_SEDE_NOMBRE=\"Sede Centro\" NEXT_PUBLIC_SEDE_ID=centro NEXT_PUBLIC_SEDE_COLOR=#10B981 NEXT_PUBLIC_API_URL=http://localhost:3002 next dev -p 4002",
     "dev:sur": "cross-env NEXT_PUBLIC_SEDE_NOMBRE=\"Sede Sur\" NEXT_PUBLIC_SEDE_ID=sur NEXT_PUBLIC_SEDE_COLOR=#F59E0B NEXT_PUBLIC_API_URL=http://localhost:3003 next dev -p 4003",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 4001",
     "lint": "eslint"
   },
   "dependencies": {

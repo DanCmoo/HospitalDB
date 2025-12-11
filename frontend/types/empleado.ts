@@ -1,10 +1,12 @@
 export interface Empleado {
   idEmp: number;
+  idSede: number;
   numDoc: string;
   hashContrato: string;
-  idSede: number;
   nomDept: string;
   cargo: string;
+  activo?: boolean;
+  fechaContratacion?: string;
   persona?: {
     numDoc: string;
     tipoDoc: string;
@@ -15,16 +17,18 @@ export interface Empleado {
 }
 
 export interface CreateEmpleadoRequest {
+  idEmp: number;
+  idSede: number;
   numDoc: string;
   hashContrato?: string;
-  idSede: number;
   nomDept: string;
   cargo: string;
+  activo?: boolean;
 }
 
 export interface UpdateEmpleadoRequest {
   hashContrato?: string;
-  idSede?: number;
   nomDept?: string;
   cargo?: string;
+  activo?: boolean;
 }

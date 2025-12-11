@@ -76,11 +76,11 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700 max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Registro de Usuario</h1>
-          <p className="text-gray-600">Paso {step} de 2</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Registro de Usuario</h1>
+          <p className="text-gray-300">Paso {step} de 2</p>
         </div>
 
         {error && (
@@ -91,16 +91,16 @@ export default function RegisterPage() {
 
         {step === 1 ? (
           <form onSubmit={handlePersonaSubmit} className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Datos Personales</h2>
+            <h2 className="text-xl font-semibold text-gray-300 mb-4">Datos Personales</h2>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Tipo de Documento
               </label>
               <select
                 value={personaData.tipoDoc}
                 onChange={(e) => setPersonaData({ ...personaData, tipoDoc: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               >
                 <option value="CC">Cédula de Ciudadanía</option>
@@ -111,52 +111,52 @@ export default function RegisterPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Número de Documento
               </label>
               <input
                 type="text"
                 value={personaData.numDoc}
                 onChange={(e) => setPersonaData({ ...personaData, numDoc: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Nombre Completo
               </label>
               <input
                 type="text"
                 value={personaData.nomPers}
                 onChange={(e) => setPersonaData({ ...personaData, nomPers: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Correo Electrónico
               </label>
               <input
                 type="email"
                 value={personaData.correo}
                 onChange={(e) => setPersonaData({ ...personaData, correo: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Teléfono
               </label>
               <input
                 type="tel"
                 value={personaData.telPers}
                 onChange={(e) => setPersonaData({ ...personaData, telPers: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -170,58 +170,58 @@ export default function RegisterPage() {
           </form>
         ) : (
           <form onSubmit={handleUsuarioSubmit} className="space-y-4">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Datos de Acceso</h2>
+            <h2 className="text-xl font-semibold text-gray-300 mb-4">Datos de Acceso</h2>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Nombre de Usuario
               </label>
               <input
                 type="text"
                 value={usuarioData.username}
                 onChange={(e) => setUsuarioData({ ...usuarioData, username: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 minLength={3}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Contraseña (mínimo 6 caracteres)
               </label>
               <input
                 type="password"
                 value={usuarioData.password}
                 onChange={(e) => setUsuarioData({ ...usuarioData, password: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 minLength={6}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Confirmar Contraseña
               </label>
               <input
                 type="password"
                 value={usuarioData.confirmPassword}
                 onChange={(e) => setUsuarioData({ ...usuarioData, confirmPassword: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 minLength={6}
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 Rol
               </label>
               <select
                 value={usuarioData.rol}
                 onChange={(e) => setUsuarioData({ ...usuarioData, rol: e.target.value as any })}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
                 required
               >
                 <option value="personal_administrativo">Personal Administrativo</option>
@@ -251,7 +251,7 @@ export default function RegisterPage() {
         )}
 
         <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-300">
             ¿Ya tienes cuenta?{' '}
             <button
               onClick={() => router.push('/login')}

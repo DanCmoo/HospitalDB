@@ -116,7 +116,7 @@ export default function PertenecePage() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Asignación de Equipamiento a Departamentos</h1>
+        <h1 className="text-3xl font-bold text-white">Asignación de Equipamiento a Departamentos</h1>
         <button
           onClick={() => {
             resetForm();
@@ -134,12 +134,12 @@ export default function PertenecePage() {
           placeholder="Buscar por departamento o equipamiento..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border rounded"
+          className="flex-1 px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         />
         <select
           value={departamentoFilter}
           onChange={(e) => setDepartamentoFilter(e.target.value)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         >
           <option value="">Todos los departamentos</option>
           {departamentos.map((dept) => (
@@ -151,7 +151,7 @@ export default function PertenecePage() {
         <select
           value={equipamientoFilter}
           onChange={(e) => setEquipamientoFilter(e.target.value)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         >
           <option value="">Todos los equipamientos</option>
           {equipamientos.map((eq) => (
@@ -163,31 +163,31 @@ export default function PertenecePage() {
       </div>
 
       {/* Vista de tabla completa */}
-      <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-        <h2 className="text-xl font-semibold p-4 bg-gray-50">Vista de Tabla</h2>
+      <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 overflow-hidden mb-8">
+        <h2 className="text-xl font-semibold p-4 bg-gray-800 text-white">Vista de Tabla</h2>
         <table className="min-w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Departamento</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sede</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Equipamiento</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Estado</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Responsable</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Departamento</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Sede</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Equipamiento</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Estado</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Responsable</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-700">
             {filteredPerteneces.map((per) => (
-              <tr key={`${per.nomDept}-${per.codEq}`} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm font-medium">{per.departamento?.nomDept || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm">{per.departamento?.sede?.nomSede || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm">{per.equipamiento?.nomEq || 'N/A'}</td>
+              <tr key={`${per.nomDept}-${per.codEq}`} className="hover:bg-gray-700">
+                <td className="px-6 py-4 text-sm font-medium text-white">{per.departamento?.nomDept || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{per.departamento?.sede?.nomSede || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{per.equipamiento?.nomEq || 'N/A'}</td>
                 <td className="px-6 py-4">
                   <span className={`px-2 py-1 text-xs font-semibold rounded ${getEstadoColor(per.equipamiento?.estado || '')}`}>
                     {per.equipamiento?.estado || 'N/A'}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-sm">
+                <td className="px-6 py-4 text-sm text-white">
                   {per.equipamiento?.empleado?.persona?.nomPers || 'N/A'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
@@ -209,21 +209,21 @@ export default function PertenecePage() {
         {departamentosConEquipamiento
           .filter((dept) => !departamentoFilter || dept.nomDept === departamentoFilter)
           .map((dept) => (
-            <div key={dept.nomDept} className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-lg font-semibold mb-2">{dept.nomDept}</h3>
-              <p className="text-sm text-gray-600 mb-4">
+            <div key={dept.nomDept} className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 p-6">
+              <h3 className="text-lg font-semibold mb-2 text-white">{dept.nomDept}</h3>
+              <p className="text-sm text-gray-300 mb-4">
                 Sede: {dept.sede?.nomSede || 'N/A'}
               </p>
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-gray-700">
+                <h4 className="text-sm font-medium text-gray-300">
                   Equipamiento ({dept.equipamientos.length})
                 </h4>
                 {dept.equipamientos.length === 0 ? (
-                  <p className="text-sm text-gray-500 italic">Sin equipamiento asignado</p>
+                  <p className="text-sm text-gray-400 italic">Sin equipamiento asignado</p>
                 ) : (
                   <ul className="space-y-1">
                     {dept.equipamientos.map((eq) => (
-                      <li key={eq.codEq} className="text-sm flex items-center justify-between">
+                      <li key={eq.codEq} className="text-sm flex items-center justify-between text-white">
                         <span>{eq.nomEq}</span>
                         <span className={`px-2 py-1 text-xs rounded ${getEstadoColor(eq.estado)}`}>
                           {eq.estado}
@@ -239,15 +239,15 @@ export default function PertenecePage() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Nueva Asignación</h2>
+          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">Nueva Asignación</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Departamento</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Departamento</label>
                 <select
                   value={formData.nomDept}
                   onChange={(e) => setFormData({ ...formData, nomDept: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 >
                   <option value="">Seleccione un departamento</option>
@@ -260,11 +260,11 @@ export default function PertenecePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Equipamiento</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Equipamiento</label>
                 <select
                   value={formData.codEq}
                   onChange={(e) => setFormData({ ...formData, codEq: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                 >
                   <option value={0}>Seleccione un equipamiento</option>
@@ -282,7 +282,7 @@ export default function PertenecePage() {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-600 rounded hover:bg-gray-700 text-gray-300"
                 >
                   Cancelar
                 </button>

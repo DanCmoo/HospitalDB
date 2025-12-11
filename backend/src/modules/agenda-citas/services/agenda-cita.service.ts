@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { AgendaCitaRepository } from '../repositories/agenda-cita.repository';
 import { CreateAgendaCitaDto, UpdateAgendaCitaDto, AgendaCitaResponseDto } from '../dtos';
 import { Between } from 'typeorm';
+import { SedeConfig } from '../../../config/sede.config';
 
 @Injectable()
 export class AgendaCitaService {
@@ -14,8 +15,9 @@ export class AgendaCitaService {
     return citas.map((cita) => this.mapToResponse(cita));
   }
 
-  async findById(idCita: number): Promise<AgendaCitaResponseDto> {
-    const cita = await this.agendaCitaRepository.findById(idCita);
+  async findById(idCita: number, idSede?: number): Promise<AgendaCitaResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const cita = await this.agendaCitaRepository.findById(idCita, sede);
     if (!cita) {
       throw new NotFoundException(`Cita con ID ${idCita} no encontrada`);
     }
@@ -27,13 +29,15 @@ export class AgendaCitaService {
     return citas.map((cita) => this.mapToResponse(cita));
   }
 
-  async findByEmpleado(idEmp: number): Promise<AgendaCitaResponseDto[]> {
-    const citas = await this.agendaCitaRepository.findByEmpleado(idEmp);
+  async findByEmpleado(idEmp: number, idSede?: number): Promise<AgendaCitaResponseDto[]> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const citas = await this.agendaCitaRepository.findByEmpleado(idEmp, sede);
     return citas.map((cita) => this.mapToResponse(cita));
   }
 
-  async findByPaciente(codPac: number): Promise<AgendaCitaResponseDto[]> {
-    const citas = await this.agendaCitaRepository.findByPaciente(codPac);
+  async findByPaciente(codPac: number, idSede?: number): Promise<AgendaCitaResponseDto[]> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const citas = await this.agendaCitaRepository.findByPaciente(codPac, sede);
     return citas.map((cita) => this.mapToResponse(cita));
   }
 
@@ -68,8 +72,9 @@ export class AgendaCitaService {
     return this.mapToResponse(cita);
   }
 
-  async update(idCita: number, dto: UpdateAgendaCitaDto): Promise<AgendaCitaResponseDto> {
-    const existing = await this.agendaCitaRepository.findById(idCita);
+  async update(idCita: number, dto: UpdateAgendaCitaDto, idSede?: number): Promise<AgendaCitaResponseDto> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.agendaCitaRepository.findById(idCita, sede);
     if (!existing) {
       throw new NotFoundException(`Cita con ID ${idCita} no encontrada`);
     }
@@ -88,19 +93,20 @@ export class AgendaCitaService {
       }
     }
 
-    const updated = await this.agendaCitaRepository.update(idCita, {
+    const updated = await this.agendaCitaRepository.update(idCita, sede, {
       ...dto,
       fecha: dto.fecha ? new Date(dto.fecha) : undefined,
     });
     return this.mapToResponse(updated);
   }
 
-  async delete(idCita: number): Promise<void> {
-    const existing = await this.agendaCitaRepository.findById(idCita);
+  async delete(idCita: number, idSede?: number): Promise<void> {
+    const sede = idSede || SedeConfig.getIdSede();
+    const existing = await this.agendaCitaRepository.findById(idCita, sede);
     if (!existing) {
       throw new NotFoundException(`Cita con ID ${idCita} no encontrada`);
     }
-    await this.agendaCitaRepository.delete(idCita);
+    await this.agendaCitaRepository.delete(idCita, sede);
   }
 
   async count(): Promise<number> {

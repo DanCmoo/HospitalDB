@@ -179,7 +179,8 @@ CREATE TABLE Personas (
     num_doc VARCHAR(20) PRIMARY KEY,
     tipo_doc VARCHAR(20) NOT NULL,
     nom_pers VARCHAR(50) NOT NULL,
-    correo VARCHAR(60),
+    correo VARCHAR(60) UNIQUE,
+    contrasena VARCHAR(100),
     tel_pers VARCHAR(20),
     id_sede_registro INT NOT NULL DEFAULT 1,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -473,10 +474,10 @@ INSERT INTO Departamentos VALUES
 ('Medicina Interna', 2), ('Pediatría', 2), ('Ginecología', 2);
 
 INSERT INTO Personas VALUES
-('3691472580', 'CC', 'Miguel Flores', 'miguel.flores@sedecentro.com', '3153691472', 2, NOW(), NOW()),
-('7894561230', 'CC', 'Patricia Núñez', 'patricia.nunez@sedecentro.com', '3007894561', 2, NOW(), NOW()),
-('4567891230', 'CC', 'Roberto Castillo', 'roberto.castillo@sedecentro.com', '3104567891', 2, NOW(), NOW()),
-('7531598520', 'CC', 'Elena Vargas', 'elena.vargas@sedecentro.com', '3207531598', 2, NOW(), NOW());
+('3691472580', 'CC', 'Miguel Flores', 'miguel.flores@sedecentro.com', 'miguel123', '3153691472', 2, NOW(), NOW()),
+('7894561230', 'CC', 'Patricia Núñez', 'patricia.nunez@sedecentro.com', 'patricia123', '3007894561', 2, NOW(), NOW()),
+('4567891230', 'CC', 'Roberto Castillo', 'roberto.castillo@sedecentro.com', 'roberto123', '3104567891', 2, NOW(), NOW()),
+('7531598520', 'CC', 'Elena Vargas', 'elena.vargas@sedecentro.com', 'elena123', '3207531598', 2, NOW(), NOW());
 
 INSERT INTO Pacientes VALUES
 (201, 2, '3691472580', 'Asma bronquial', '1978-05-30', 'Masculino', 'Activo', NOW(), NOW()),
@@ -824,10 +825,10 @@ INSERT INTO Departamentos VALUES
 ('Medicina Interna', 2), ('Pediatría', 2), ('Ginecología', 2);
 
 INSERT INTO Personas VALUES
-('3691472580', 'CC', 'Miguel Flores', 'miguel.flores@sedecentro.com', '3153691472', 2, NOW(), NOW()),
-('7894561230', 'CC', 'Patricia Núñez', 'patricia.nunez@sedecentro.com', '3007894561', 2, NOW(), NOW()),
-('4567891230', 'CC', 'Roberto Castillo', 'roberto.castillo@sedecentro.com', '3104567891', 2, NOW(), NOW()),
-('7531598520', 'CC', 'Elena Vargas', 'elena.vargas@sedecentro.com', '3207531598', 2, NOW(), NOW());
+('3691472580', 'CC', 'Miguel Flores', 'miguel.flores@sedecentro.com', 'miguel123', '3153691472', 2, NOW(), NOW()),
+('7894561230', 'CC', 'Patricia Núñez', 'patricia.nunez@sedecentro.com', 'patricia123', '3007894561', 2, NOW(), NOW()),
+('4567891230', 'CC', 'Roberto Castillo', 'roberto.castillo@sedecentro.com', 'roberto123', '3104567891', 2, NOW(), NOW()),
+('7531598520', 'CC', 'Elena Vargas', 'elena.vargas@sedecentro.com', 'elena123', '3207531598', 2, NOW(), NOW());
 
 INSERT INTO Pacientes VALUES
 (201, 2, '3691472580', 'Asma bronquial', '1978-05-30', 'Masculino', 'Activo', NOW(), NOW()),
@@ -1175,9 +1176,9 @@ INSERT INTO Departamentos VALUES
 ('Ortopedia', 3), ('Fisioterapia', 3), ('Radiología', 3);
 
 INSERT INTO Personas VALUES
-('1593574560', 'CC', 'Andrés Gutiérrez', 'andres.gutierrez@sedesur.com', '3011593574', 3, NOW(), NOW()),
-('8529637410', 'CC', 'Carmen Ospina', 'carmen.ospina@sedesur.com', '3158529637', 3, NOW(), NOW()),
-('9517538520', 'CC', 'Fernando Ríos', 'fernando.rios@sedesur.com', '3009517538', 3, NOW(), NOW());
+('1593574560', 'CC', 'Andrés Gutiérrez', 'andres.gutierrez@sedesur.com', 'andres123', '3011593574', 3, NOW(), NOW()),
+('8529637410', 'CC', 'Carmen Ospina', 'carmen.ospina@sedesur.com', 'carmen123', '3158529637', 3, NOW(), NOW()),
+('9517538520', 'CC', 'Fernando Ríos', 'fernando.rios@sedesur.com', 'fernando123', '3009517538', 3, NOW(), NOW());
 
 INSERT INTO Pacientes VALUES
 (301, 3, '1593574560', 'Artritis reumatoide', '1965-12-18', 'Masculino', 'Activo', NOW(), NOW()),
@@ -1831,14 +1832,14 @@ INSERT INTO Departamentos VALUES
 ('Urgencias', 1), ('Cardiología', 1), ('Cirugía General', 1), ('Laboratorio Clínico', 1);
 
 INSERT INTO Personas VALUES
-('1234567890', 'CC', 'Juan Pérez García', 'juan.perez@sedenorte.com', '3001234567', 1, NOW(), NOW()),
-('0987654321', 'CC', 'María López Hernández', 'maria.lopez@sedenorte.com', '3009876543', 1, NOW(), NOW()),
-('1122334455', 'CC', 'Carlos Rodríguez Silva', 'carlos.rodriguez@sedenorte.com', '3101122334', 1, NOW(), NOW()),
-('6677889900', 'CC', 'Pedro González Castro', 'pedro.gonzalez@sedenorte.com', '3156677889', 1, NOW(), NOW()),
-('9988776655', 'CC', 'Laura Sánchez Moreno', 'laura.sanchez@sedenorte.com', '3009988776', 1, NOW(), NOW()),
-('1357924680', 'CC', 'Diego Torres Vega', 'diego.torres@sedenorte.com', '3011357924', 1, NOW(), NOW()),
-('2468013579', 'CC', 'Sofia Ramírez Ortiz', 'sofia.ramirez@sedenorte.com', '3202468013', 1, NOW(), NOW()),
-('5544332211', 'CC', 'Ana Martínez Ruiz', 'ana.martinez@sedenorte.com', '3205544332', 1, NOW(), NOW());
+('1234567890', 'CC', 'Juan Pérez García', 'juan.perez@sedenorte.com', 'juan123', '3001234567', 1, NOW(), NOW()),
+('0987654321', 'CC', 'María López Hernández', 'maria.lopez@sedenorte.com', 'maria123', '3009876543', 1, NOW(), NOW()),
+('1122334455', 'CC', 'Carlos Rodríguez Silva', 'carlos.rodriguez@sedenorte.com', 'carlos123', '3101122334', 1, NOW(), NOW()),
+('6677889900', 'CC', 'Pedro González Castro', 'pedro.gonzalez@sedenorte.com', 'pedro123', '3156677889', 1, NOW(), NOW()),
+('9988776655', 'CC', 'Laura Sánchez Moreno', 'laura.sanchez@sedenorte.com', 'laura123', '3009988776', 1, NOW(), NOW()),
+('1357924680', 'CC', 'Diego Torres Vega', 'diego.torres@sedenorte.com', 'diego123', '3011357924', 1, NOW(), NOW()),
+('2468013579', 'CC', 'Sofia Ramírez Ortiz', 'sofia.ramirez@sedenorte.com', 'sofia123', '3202468013', 1, NOW(), NOW()),
+('5544332211', 'CC', 'Ana Martínez Ruiz', 'ana.martinez@sedenorte.com', 'ana123', '3205544332', 1, NOW(), NOW());
 
 INSERT INTO Pacientes VALUES
 (101, 1, '1357924680', 'Hipertensión arterial', '1985-03-15', 'Masculino', 'Activo', NOW(), NOW()),

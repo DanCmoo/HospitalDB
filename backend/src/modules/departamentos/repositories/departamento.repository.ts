@@ -17,9 +17,9 @@ export class DepartamentoRepository {
     });
   }
 
-  async findByNombre(nomDept: string): Promise<DepartamentoEntity | null> {
+  async findByNombre(nomDept: string, idSede: number): Promise<DepartamentoEntity | null> {
     return this.repository.findOne({
-      where: { nomDept },
+      where: { nomDept, idSede },
       relations: ['sede'],
     });
   }
@@ -50,14 +50,15 @@ export class DepartamentoRepository {
 
   async update(
     nomDept: string,
+    idSede: number,
     data: Partial<DepartamentoEntity>,
   ): Promise<DepartamentoEntity | null> {
-    await this.repository.update(nomDept, data);
-    return this.findByNombre(nomDept);
+    await this.repository.update({ nomDept, idSede }, data);
+    return this.findByNombre(nomDept, idSede);
   }
 
-  async delete(nomDept: string): Promise<boolean> {
-    const result = await this.repository.delete(nomDept);
+  async delete(nomDept: string, idSede: number): Promise<boolean> {
+    const result = await this.repository.delete({ nomDept, idSede });
     return result.affected > 0;
   }
 

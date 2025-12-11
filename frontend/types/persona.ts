@@ -4,6 +4,9 @@ export interface Persona {
   nomPers: string;
   correo: string;
   telPers: string;
+  idSedeRegistro: number;
+  fechaCreacion?: string;
+  ultimaModificacion?: string;
 }
 
 export interface CreatePersonaRequest {
@@ -12,6 +15,7 @@ export interface CreatePersonaRequest {
   nomPers: string;
   correo?: string;
   telPers?: string;
+  idSedeRegistro: number;
 }
 
 export interface UpdatePersonaRequest {

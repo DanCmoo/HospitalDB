@@ -1,8 +1,11 @@
-import { IsInt, IsString, IsDateString } from 'class-validator';
+import { IsInt, IsString, IsDateString, IsBoolean, IsOptional } from 'class-validator';
 
 export class CreateHistorialMedicoDto {
   @IsInt()
   codHist: number;
+
+  @IsInt()
+  idSede: number;
 
   @IsDateString()
   fecha: string;
@@ -13,10 +16,8 @@ export class CreateHistorialMedicoDto {
   @IsString()
   diagnostico: string;
 
-  @IsInt()
-  idSede: number;
-
   @IsString()
+  @IsOptional()
   nomDept?: string;
 
   @IsInt()
@@ -24,4 +25,12 @@ export class CreateHistorialMedicoDto {
 
   @IsInt()
   codPac: number;
+
+  @IsBoolean()
+  @IsOptional()
+  compartido?: boolean;
+
+  @IsString()
+  @IsOptional()
+  nivelAcceso?: string;
 }

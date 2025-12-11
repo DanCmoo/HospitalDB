@@ -6,6 +6,7 @@ export enum EstadoEquipamiento {
 
 export interface Equipamiento {
   codEq: number;
+  idSede: number;
   nomEq: string;
   estado: EstadoEquipamiento;
   fechaMant?: string;
@@ -29,6 +30,7 @@ export interface Equipamiento {
 
 export interface CreateEquipamientoDto {
   codEq: number;
+  idSede: number;
   nomEq: string;
   estado: EstadoEquipamiento;
   fechaMant?: string;

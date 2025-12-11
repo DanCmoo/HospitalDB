@@ -148,7 +148,7 @@ export default function HistorialesPage() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Historiales Médicos</h1>
+        <h1 className="text-3xl font-bold text-white">Historiales Médicos</h1>
         <button
           onClick={() => {
             resetForm();
@@ -166,12 +166,12 @@ export default function HistorialesPage() {
           placeholder="Buscar por diagnóstico, paciente o médico..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 px-4 py-2 border rounded"
+          className="flex-1 px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         />
         <select
           value={pacienteFilter}
           onChange={(e) => setPacienteFilter(e.target.value)}
-          className="px-4 py-2 border rounded"
+          className="px-4 py-2 border border-gray-600 bg-gray-900 text-white rounded"
         >
           <option value="">Todos los pacientes</option>
           {pacientes.map((pac) => (
@@ -182,28 +182,28 @@ export default function HistorialesPage() {
         </select>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-gray-800 rounded-lg shadow-2xl border border-gray-700 overflow-hidden">
         <table className="min-w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-gray-800">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Fecha</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Hora</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paciente</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Médico</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Diagnóstico</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Fecha</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Hora</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Paciente</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Médico</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Diagnóstico</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase">Acciones</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y divide-gray-700">
             {filteredHistoriales.map((hist) => (
-              <tr key={hist.codHist} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{hist.codHist}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{hist.fecha}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm">{hist.hora}</td>
-                <td className="px-6 py-4 text-sm">{hist.paciente?.persona?.nomPers || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm">{hist.empleado?.persona?.nomPers || 'N/A'}</td>
-                <td className="px-6 py-4 text-sm max-w-xs truncate">{hist.diagnostico}</td>
+              <tr key={hist.codHist} className="hover:bg-gray-700">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{hist.codHist}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{hist.fecha}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{hist.hora}</td>
+                <td className="px-6 py-4 text-sm text-white">{hist.paciente?.persona?.nomPers || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm text-white">{hist.empleado?.persona?.nomPers || 'N/A'}</td>
+                <td className="px-6 py-4 text-sm max-w-xs truncate text-white">{hist.diagnostico}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm">
                   <button
                     onClick={() => openEditModal(hist)}
@@ -226,40 +226,40 @@ export default function HistorialesPage() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4">
+          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-700">
+            <h2 className="text-2xl font-bold mb-4 text-white">
               {editingHistorial ? 'Editar Historial' : 'Nuevo Historial'}
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Fecha</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Fecha</label>
                   <input
                     type="date"
                     value={formData.fecha}
                     onChange={(e) => setFormData({ ...formData, fecha: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Hora</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Hora</label>
                   <input
                     type="time"
                     value={formData.hora}
                     onChange={(e) => setFormData({ ...formData, hora: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Diagnóstico</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Diagnóstico</label>
                 <textarea
                   value={formData.diagnostico}
                   onChange={(e) => setFormData({ ...formData, diagnostico: e.target.value })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   rows={3}
                   required
                 />
@@ -267,11 +267,11 @@ export default function HistorialesPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Sede</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Sede</label>
                   <select
                     value={formData.idSede}
                     onChange={(e) => setFormData({ ...formData, idSede: parseInt(e.target.value) })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                     required
                     disabled={!!editingHistorial}
                   >
@@ -284,22 +284,22 @@ export default function HistorialesPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Departamento (opcional)</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-300">Departamento (opcional)</label>
                   <input
                     type="text"
                     value={formData.nomDept}
                     onChange={(e) => setFormData({ ...formData, nomDept: e.target.value })}
-                    className="w-full px-3 py-2 border rounded"
+                    className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Médico</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Médico</label>
                 <select
                   value={formData.idEmp}
                   onChange={(e) => setFormData({ ...formData, idEmp: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                   disabled={!!editingHistorial}
                 >
@@ -313,11 +313,11 @@ export default function HistorialesPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1">Paciente</label>
+                <label className="block text-sm font-medium mb-1 text-gray-300">Paciente</label>
                 <select
                   value={formData.codPac}
                   onChange={(e) => setFormData({ ...formData, codPac: parseInt(e.target.value) })}
-                  className="w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border border-gray-600 bg-gray-900 text-white rounded"
                   required
                   disabled={!!editingHistorial}
                 >
@@ -336,7 +336,7 @@ export default function HistorialesPage() {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 border rounded hover:bg-gray-100"
+                  className="px-4 py-2 border border-gray-600 rounded hover:bg-gray-700 text-gray-300"
                 >
                   Cancelar
                 </button>

@@ -7,6 +7,9 @@ export class EquipamientoEntity {
   @PrimaryColumn({ name: 'cod_eq', type: 'int' })
   codEq: number;
 
+  @PrimaryColumn({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @Column({ name: 'nom_eq', type: 'varchar', length: 50 })
   nomEq: string;
 
@@ -16,14 +19,11 @@ export class EquipamientoEntity {
   @Column({ name: 'fecha_mant', type: 'date', nullable: true })
   fechaMant: Date;
 
-  @Column({ name: 'id_sede', type: 'int' })
-  idSede: number;
-
   @Column({ name: 'id_emp', type: 'int' })
   idEmp: number;
 
   @ManyToOne(() => EmpleadoEntity, (empleado) => empleado.equipamientos)
-  @JoinColumn({ name: 'id_emp' })
+  @JoinColumn([{ name: 'id_emp', referencedColumnName: 'idEmp' }, { name: 'id_sede', referencedColumnName: 'idSede' }])
   empleado: EmpleadoEntity;
 
   @ManyToMany(() => DepartamentoEntity, (departamento) => departamento.equipamientos)

@@ -17,9 +17,9 @@ export class PrescribeRepository {
     });
   }
 
-  async findByCita(idCita: number): Promise<PrescribeEntity[]> {
+  async findByCita(idCita: number, idSede: number): Promise<PrescribeEntity[]> {
     return this.repository.find({
-      where: { idCita },
+      where: { idCita, idSede },
       relations: ['medicamento', 'cita'],
     });
   }
@@ -32,9 +32,9 @@ export class PrescribeRepository {
     });
   }
 
-  async findOne(codMed: number, idCita: number): Promise<PrescribeEntity | null> {
+  async findOne(codMed: number, idCita: number, idSede: number): Promise<PrescribeEntity | null> {
     return this.repository.findOne({
-      where: { codMed, idCita },
+      where: { codMed, idCita, idSede },
       relations: ['medicamento', 'cita', 'cita.paciente', 'cita.paciente.persona'],
     });
   }
@@ -44,13 +44,13 @@ export class PrescribeRepository {
     return this.repository.save(entity);
   }
 
-  async update(codMed: number, idCita: number, data: Partial<PrescribeEntity>): Promise<PrescribeEntity> {
-    await this.repository.update({ codMed, idCita }, data);
-    return this.findOne(codMed, idCita);
+  async update(codMed: number, idCita: number, idSede: number, data: Partial<PrescribeEntity>): Promise<PrescribeEntity> {
+    await this.repository.update({ codMed, idCita, idSede }, data);
+    return this.findOne(codMed, idCita, idSede);
   }
 
-  async delete(codMed: number, idCita: number): Promise<void> {
-    await this.repository.delete({ codMed, idCita });
+  async delete(codMed: number, idCita: number, idSede: number): Promise<void> {
+    await this.repository.delete({ codMed, idCita, idSede });
   }
 
   async count(): Promise<number> {

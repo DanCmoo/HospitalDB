@@ -6,6 +6,11 @@ export class CreatePacienteDto {
   @IsNotEmpty()
   codPac: number;
 
+  @IsInt()
+  @Min(1)
+  @IsNotEmpty()
+  idSede: number;
+
   @IsString()
   @MaxLength(20)
   @IsNotEmpty()
@@ -24,4 +29,9 @@ export class CreatePacienteDto {
   @MaxLength(20)
   @IsNotEmpty()
   genero: string;
+
+  @IsString()
+  @MaxLength(20)
+  @IsOptional()
+  estadoPaciente?: string;
 }

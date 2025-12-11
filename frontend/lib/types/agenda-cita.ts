@@ -7,14 +7,16 @@ export enum EstadoCita {
 
 export interface AgendaCita {
   idCita: number;
+  idSede: number;
   fecha: string;
   hora: string;
   tipoServicio: string;
   estado: EstadoCita;
-  idSede: number;
   nomDept?: string;
   idEmp: number;
   codPac: number;
+  fechaCreacion?: string;
+  ultimaModificacion?: string;
   empleado?: {
     idEmp: number;
     cargo: string;

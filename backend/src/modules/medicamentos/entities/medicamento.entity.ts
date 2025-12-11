@@ -18,6 +18,9 @@ export class MedicamentoEntity {
   @Column({ name: 'descripcion', type: 'varchar', length: 40, nullable: true })
   descripcion: string;
 
+  @Column({ name: 'id_sede', type: 'int' })
+  idSede: number;
+
   @OneToMany(() => PrescribeEntity, (prescribe) => prescribe.medicamento)
   prescripciones: PrescribeEntity[];
 }
