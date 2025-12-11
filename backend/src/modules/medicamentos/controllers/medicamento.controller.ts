@@ -29,10 +29,10 @@ export class MedicamentoController {
 
   @Get()
   async findAll(
-    @Query('page', ParseIntPipe) page?: number,
-    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('proveedor') proveedor?: string,
-    @Query('stockBajo', ParseIntPipe) stockBajo?: number,
+    @Query('stockBajo', new ParseIntPipe({ optional: true })) stockBajo?: number,
   ): Promise<
     | MedicamentoResponseDto[]
     | { data: MedicamentoResponseDto[]; total: number; page: number; limit: number }

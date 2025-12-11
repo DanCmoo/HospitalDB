@@ -26,9 +26,9 @@ export class DepartamentoController {
 
   @Get()
   async findAll(
-    @Query('page', ParseIntPipe) page?: number,
-    @Query('limit', ParseIntPipe) limit?: number,
-    @Query('idSede', ParseIntPipe) idSede?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
+    @Query('idSede', new ParseIntPipe({ optional: true })) idSede?: number,
   ): Promise<DepartamentoResponseDto[] | { data: DepartamentoResponseDto[]; total: number; page: number; limit: number }> {
     if (idSede) {
       return this.departamentoService.findBySede(idSede);
@@ -47,7 +47,7 @@ export class DepartamentoController {
   }
 
   @Get('count')
-  async count(@Query('idSede', ParseIntPipe) idSede?: number): Promise<{ count: number }> {
+  async count(@Query('idSede', new ParseIntPipe({ optional: true })) idSede?: number): Promise<{ count: number }> {
     const count = idSede
       ? await this.departamentoService.countBySede(idSede)
       : await this.departamentoService.count();

@@ -294,7 +294,6 @@ function ReportesContent() {
             <button
               onClick={limpiarFormulario}
               className="px-6 py-3 border border-gray-600 rounded-lg font-semibold hover:bg-gray-700 transition-colors text-gray-300">
-            >
               Limpiar
             </button>
           </div>

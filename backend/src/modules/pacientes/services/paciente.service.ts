@@ -133,13 +133,19 @@ export class PacienteService {
   }
 
   private mapEntityToDto(entity: PacienteEntity): PacienteResponseDto {
+    const fechaNac = entity.fechaNac instanceof Date 
+      ? entity.fechaNac 
+      : entity.fechaNac 
+        ? new Date(entity.fechaNac) 
+        : null;
+
     return {
       codPac: entity.codPac,
       numDoc: entity.numDoc,
       drPac: entity.drPac,
-      fechaNac: entity.fechaNac.toISOString().split('T')[0],
+      fechaNac: fechaNac ? fechaNac.toISOString().split('T')[0] : null,
       genero: entity.genero,
-      edad: this.calculateAge(entity.fechaNac),
+      edad: fechaNac ? this.calculateAge(fechaNac) : null,
       persona: entity.persona
         ? {
             numDoc: entity.persona.numDoc,

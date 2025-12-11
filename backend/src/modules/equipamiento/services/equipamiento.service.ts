@@ -182,11 +182,17 @@ export class EquipamientoService {
   }
 
   private mapEntityToDto(entity: EquipamientoEntity): EquipamientoResponseDto {
+    const fechaMant = entity.fechaMant instanceof Date 
+      ? entity.fechaMant 
+      : entity.fechaMant 
+        ? new Date(entity.fechaMant) 
+        : null;
+
     return {
       codEq: entity.codEq,
       nomEq: entity.nomEq,
       estado: entity.estado,
-      fechaMant: entity.fechaMant ? entity.fechaMant.toISOString().split('T')[0] : undefined,
+      fechaMant: fechaMant ? fechaMant.toISOString().split('T')[0] : undefined,
       idEmp: entity.idEmp,
       empleado: entity.empleado
         ? {

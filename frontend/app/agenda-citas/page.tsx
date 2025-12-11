@@ -51,13 +51,17 @@ export default function AgendaCitasPage() {
         sedesApi.getAll(),
       ]);
 
-      setCitas(citasData);
-      setEmpleados(empleadosData);
-      setPacientes(pacientesData);
-      setSedes(sedesData);
+      setCitas(Array.isArray(citasData) ? citasData : []);
+      setEmpleados(Array.isArray(empleadosData) ? empleadosData : []);
+      setPacientes(Array.isArray(pacientesData) ? pacientesData : []);
+      setSedes(Array.isArray(sedesData) ? sedesData : []);
     } catch (error) {
       console.error('Error cargando datos:', error);
       alert('Error al cargar los datos');
+      setCitas([]);
+      setEmpleados([]);
+      setPacientes([]);
+      setSedes([]);
     } finally {
       setLoading(false);
     }
@@ -139,11 +143,11 @@ export default function AgendaCitasPage() {
     setEditingCita(null);
   };
 
-  const filteredCitas = citas.filter((cita) => {
+  const filteredCitas = (citas || []).filter((cita) => {
     const matchesSearch =
-      cita.tipoServicio.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cita.empleado?.persona?.nomPers.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      cita.paciente?.persona?.nomPers.toLowerCase().includes(searchTerm.toLowerCase());
+      cita.tipoServicio?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cita.empleado?.persona?.nomPers?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      cita.paciente?.persona?.nomPers?.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
   });
 

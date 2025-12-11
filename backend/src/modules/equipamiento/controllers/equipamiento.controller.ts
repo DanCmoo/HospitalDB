@@ -28,10 +28,10 @@ export class EquipamientoController {
 
   @Get()
   async findAll(
-    @Query('page', ParseIntPipe) page?: number,
-    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('estado') estado?: string,
-    @Query('empleado', ParseIntPipe) empleado?: number,
+    @Query('empleado', new ParseIntPipe({ optional: true })) empleado?: number,
     @Query('departamento') departamento?: string,
   ): Promise<
     | EquipamientoResponseDto[]

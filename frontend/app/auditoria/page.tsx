@@ -42,11 +42,13 @@ export default function AuditoriaPage() {
         personasApi.getAll(),
       ]);
 
-      setAuditorias(auditoriasData);
-      setPersonas(personasData);
+      setAuditorias(Array.isArray(auditoriasData) ? auditoriasData : []);
+      setPersonas(Array.isArray(personasData) ? personasData : []);
     } catch (error) {
       console.error('Error cargando datos:', error);
       alert('Error al cargar los datos de auditoría');
+      setAuditorias([]);
+      setPersonas([]);
     } finally {
       setLoading(false);
     }
@@ -100,7 +102,7 @@ export default function AuditoriaPage() {
     }
   };
 
-  const filteredAuditorias = auditorias.filter((aud) => {
+  const filteredAuditorias = (auditorias || []).filter((aud) => {
     const matchesSearch =
       aud.accion.toLowerCase().includes(searchTerm.toLowerCase()) ||
       aud.tablaAfectada.toLowerCase().includes(searchTerm.toLowerCase()) ||

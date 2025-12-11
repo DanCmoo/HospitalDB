@@ -39,12 +39,15 @@ export default function PertenecePage() {
         equipamientoApi.getAll(),
       ]);
 
-      setPerteneces(pertenecesData);
-      setDepartamentos(departamentosData);
-      setEquipamientos(equipamientosData);
+      setPerteneces(Array.isArray(pertenecesData) ? pertenecesData : []);
+      setDepartamentos(Array.isArray(departamentosData) ? departamentosData : []);
+      setEquipamientos(Array.isArray(equipamientosData) ? equipamientosData : []);
     } catch (error) {
       console.error('Error cargando datos:', error);
       alert('Error al cargar los datos');
+      setPerteneces([]);
+      setDepartamentos([]);
+      setEquipamientos([]);
     } finally {
       setLoading(false);
     }
@@ -80,7 +83,7 @@ export default function PertenecePage() {
     });
   };
 
-  const filteredPerteneces = perteneces.filter((per) => {
+  const filteredPerteneces = (perteneces || []).filter((per) => {
     const matchesSearch =
       per.departamento?.nomDept.toLowerCase().includes(searchTerm.toLowerCase()) ||
       per.equipamiento?.nomEq.toLowerCase().includes(searchTerm.toLowerCase());
@@ -101,9 +104,9 @@ export default function PertenecePage() {
   };
 
   // Agrupar por departamento para vista mejorada
-  const departamentosConEquipamiento = departamentos.map((dept) => ({
+  const departamentosConEquipamiento = (departamentos || []).map((dept) => ({
     ...dept,
-    equipamientos: perteneces
+    equipamientos: (perteneces || [])
       .filter((p) => p.nomDept === dept.nomDept)
       .map((p) => p.equipamiento)
       .filter((eq): eq is Equipamiento => eq !== undefined),

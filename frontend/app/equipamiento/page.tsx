@@ -29,16 +29,17 @@ export default function EquipamientoPage() {
     setError(null);
     try {
       const data = await equipamientoApi.getAll();
-      setEquipamientos(data);
+      setEquipamientos(Array.isArray(data) ? data : []);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Error al cargar equipamiento');
+      setEquipamientos([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const filterEquipamientos = () => {
-    let filtered = [...equipamientos];
+    let filtered = [...(equipamientos || [])];
 
     if (estadoFilter) {
       filtered = filtered.filter((e) => e.estado === estadoFilter);

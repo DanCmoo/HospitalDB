@@ -26,8 +26,8 @@ export class SedeController {
 
   @Get()
   async findAll(
-    @Query('page', ParseIntPipe) page?: number,
-    @Query('limit', ParseIntPipe) limit?: number,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit?: number,
     @Query('ciudad') ciudad?: string,
   ): Promise<SedeResponseDto[] | { data: SedeResponseDto[]; total: number; page: number; limit: number }> {
     if (ciudad) {

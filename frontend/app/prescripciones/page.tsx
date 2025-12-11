@@ -42,12 +42,15 @@ export default function PrescripcionesPage() {
         agendaCitasApi.getAll(),
       ]);
 
-      setPrescripciones(prescripcionesData);
-      setMedicamentos(medicamentosData);
-      setCitas(citasData);
+      setPrescripciones(Array.isArray(prescripcionesData) ? prescripcionesData : []);
+      setMedicamentos(Array.isArray(medicamentosData) ? medicamentosData : []);
+      setCitas(Array.isArray(citasData) ? citasData : []);
     } catch (error) {
       console.error('Error cargando datos:', error);
       alert('Error al cargar los datos');
+      setPrescripciones([]);
+      setMedicamentos([]);
+      setCitas([]);
     } finally {
       setLoading(false);
     }
@@ -121,7 +124,7 @@ export default function PrescripcionesPage() {
     setEditingPrescripcion(null);
   };
 
-  const filteredPrescripciones = prescripciones.filter((prescripcion) => {
+  const filteredPrescripciones = (prescripciones || []).filter((prescripcion) => {
     const matchesSearch =
       prescripcion.medicamento?.nomMed.toLowerCase().includes(searchTerm.toLowerCase()) ||
       prescripcion.cita?.paciente?.persona?.nomPers.toLowerCase().includes(searchTerm.toLowerCase());

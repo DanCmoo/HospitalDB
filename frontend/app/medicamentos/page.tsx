@@ -31,16 +31,17 @@ export default function MedicamentosPage() {
     setError(null);
     try {
       const data = await medicamentosApi.getAll();
-      setMedicamentos(data);
+      setMedicamentos(Array.isArray(data) ? data : []);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Error al cargar medicamentos');
+      setMedicamentos([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const filterMedicamentos = () => {
-    let filtered = [...medicamentos];
+    let filtered = [...(medicamentos || [])];
 
     // Filtro por stock
     if (stockFilter === 'bajo') {
@@ -111,8 +112,8 @@ export default function MedicamentosPage() {
     setSelectedMedicamento(undefined);
   };
 
-  const stockBajoCount = medicamentos.filter((m) => m.stock > 0 && m.stock <= 10).length;
-  const stockAgotadoCount = medicamentos.filter((m) => m.stock === 0).length;
+  const stockBajoCount = (medicamentos || []).filter((m) => m.stock > 0 && m.stock <= 10).length;
+  const stockAgotadoCount = (medicamentos || []).filter((m) => m.stock === 0).length;
 
   if (isLoading) {
     return (

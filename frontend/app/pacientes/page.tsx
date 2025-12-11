@@ -29,16 +29,17 @@ export default function PacientesPage() {
     setError(null);
     try {
       const data = await pacientesApi.getAll();
-      setPacientes(data);
+      setPacientes(Array.isArray(data) ? data : []);
     } catch (error: any) {
       setError(error.response?.data?.message || 'Error al cargar pacientes');
+      setPacientes([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const filterPacientes = () => {
-    let filtered = [...pacientes];
+    let filtered = [...(pacientes || [])];
 
     if (generoFilter) {
       filtered = filtered.filter((p) => p.genero === generoFilter);

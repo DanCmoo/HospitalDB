@@ -48,13 +48,17 @@ export default function HistorialesPage() {
         sedesApi.getAll(),
       ]);
 
-      setHistoriales(historialesData);
-      setEmpleados(empleadosData);
-      setPacientes(pacientesData);
-      setSedes(sedesData);
+      setHistoriales(Array.isArray(historialesData) ? historialesData : []);
+      setEmpleados(Array.isArray(empleadosData) ? empleadosData : []);
+      setPacientes(Array.isArray(pacientesData) ? pacientesData : []);
+      setSedes(Array.isArray(sedesData) ? sedesData : []);
     } catch (error) {
       console.error('Error cargando datos:', error);
       alert('Error al cargar los datos');
+      setHistoriales([]);
+      setEmpleados([]);
+      setPacientes([]);
+      setSedes([]);
     } finally {
       setLoading(false);
     }
@@ -62,7 +66,7 @@ export default function HistorialesPage() {
 
   const handleCreate = async () => {
     try {
-      const nextId = historiales.length > 0 ? Math.max(...historiales.map(h => h.codHist)) + 1 : 1;
+      const nextId = (historiales || []).length > 0 ? Math.max(...(historiales || []).map(h => h.codHist)) + 1 : 1;
       await historialesApi.create({ ...formData, codHist: nextId });
       setShowModal(false);
       resetForm();
@@ -133,7 +137,7 @@ export default function HistorialesPage() {
     setEditingHistorial(null);
   };
 
-  const filteredHistoriales = historiales.filter((hist) => {
+  const filteredHistoriales = (historiales || []).filter((hist) => {
     const matchesSearch =
       hist.diagnostico.toLowerCase().includes(searchTerm.toLowerCase()) ||
       hist.paciente?.persona?.nomPers.toLowerCase().includes(searchTerm.toLowerCase()) ||
