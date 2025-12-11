@@ -8,6 +8,9 @@ function DashboardContent() {
   const { user, logout } = useAuth();
   const router = useRouter();
 
+  const sedeName = process.env.NEXT_PUBLIC_SEDE_NOMBRE || 'Sede Desconocida';
+  const sedeColor = process.env.NEXT_PUBLIC_SEDE_COLOR || '#3B82F6';
+
   const handleLogout = async () => {
     await logout();
     router.push('/login');
@@ -18,8 +21,14 @@ function DashboardContent() {
       <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-4">
               <h1 className="text-xl font-bold text-gray-800">Hospital Management</h1>
+              <div 
+                className="px-3 py-1 rounded-full text-xs font-semibold text-white"
+                style={{ backgroundColor: sedeColor }}
+              >
+                {sedeName}
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">

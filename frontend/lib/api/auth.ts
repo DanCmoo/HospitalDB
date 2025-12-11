@@ -3,13 +3,11 @@ import { Usuario, CreateUsuarioDto, UpdateUsuarioDto, LoginDto } from '../types/
 
 export const authApi = {
   login: async (data: LoginDto): Promise<Usuario> => {
-    const response = await apiClient.post<Usuario>('/auth/login', data);
-    return response.data;
+    return apiClient.post<Usuario>('/auth/login', data);
   },
 
   register: async (data: CreateUsuarioDto): Promise<Usuario> => {
-    const response = await apiClient.post<Usuario>('/auth/register', data);
-    return response.data;
+    return apiClient.post<Usuario>('/auth/register', data);
   },
 
   logout: async (): Promise<void> => {
@@ -17,13 +15,11 @@ export const authApi = {
   },
 
   getProfile: async (): Promise<Usuario> => {
-    const response = await apiClient.get<Usuario>('/auth/profile');
-    return response.data;
+    return apiClient.get<Usuario>('/auth/profile');
   },
 
   checkSession: async (): Promise<{ authenticated: boolean; user?: any }> => {
-    const response = await apiClient.get<{ authenticated: boolean; user?: any }>('/auth/session');
-    return response.data;
+    return apiClient.get<{ authenticated: boolean; user?: any }>('/auth/session');
   },
 
   changePassword: async (oldPassword: string, newPassword: string): Promise<void> => {
@@ -33,18 +29,15 @@ export const authApi = {
   // Admin endpoints
   getAllUsers: async (rol?: string): Promise<Usuario[]> => {
     const url = rol ? `/auth/usuarios?rol=${rol}` : '/auth/usuarios';
-    const response = await apiClient.get<Usuario[]>(url);
-    return response.data;
+    return apiClient.get<Usuario[]>(url);
   },
 
   getUserById: async (id: number): Promise<Usuario> => {
-    const response = await apiClient.get<Usuario>(`/auth/usuarios/${id}`);
-    return response.data;
+    return apiClient.get<Usuario>(`/auth/usuarios/${id}`);
   },
 
   updateUser: async (id: number, data: UpdateUsuarioDto): Promise<Usuario> => {
-    const response = await apiClient.put<Usuario>(`/auth/usuarios/${id}`, data);
-    return response.data;
+    return apiClient.put<Usuario>(`/auth/usuarios/${id}`, data);
   },
 
   deleteUser: async (id: number): Promise<void> => {
